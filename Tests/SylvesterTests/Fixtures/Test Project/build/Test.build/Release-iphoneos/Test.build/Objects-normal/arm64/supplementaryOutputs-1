@@ -1,0 +1,8 @@
+"/Volumes/Repositories/Private/Fork/Library/Sylvester/Tests/SylvesterTests/Fixtures/Test Project/Test/DocSupportInputsMain.swift":
+  diagnostics: "/Volumes/Repositories/Private/Fork/Library/Sylvester/Tests/SylvesterTests/Fixtures/Test Project/build/Test.build/Release-iphoneos/Test.build/Objects-normal/arm64/Test-master.dia"
+  dependencies: "/Volumes/Repositories/Private/Fork/Library/Sylvester/Tests/SylvesterTests/Fixtures/Test Project/build/Test.build/Release-iphoneos/Test.build/Objects-normal/arm64/Test-master.d"
+  objc-header: "/Volumes/Repositories/Private/Fork/Library/Sylvester/Tests/SylvesterTests/Fixtures/Test Project/build/Test.build/Release-iphoneos/Test.build/Objects-normal/arm64/Test-Swift.h"
+  swiftmodule: "/Volumes/Repositories/Private/Fork/Library/Sylvester/Tests/SylvesterTests/Fixtures/Test Project/build/Test.build/Release-iphoneos/Test.build/Objects-normal/arm64/Test.swiftmodule"
+  abi-baseline-json: "/Volumes/Repositories/Private/Fork/Library/Sylvester/Tests/SylvesterTests/Fixtures/Test Project/build/Test.build/Release-iphoneos/Test.build/Objects-normal/arm64/Test.abi.json"
+  swiftdoc: "/Volumes/Repositories/Private/Fork/Library/Sylvester/Tests/SylvesterTests/Fixtures/Test Project/build/Test.build/Release-iphoneos/Test.build/Objects-normal/arm64/Test.swiftdoc"
+  swiftsourceinfo: "/Volumes/Repositories/Private/Fork/Library/Sylvester/Tests/SylvesterTests/Fixtures/Test Project/build/Test.build/Release-iphoneos/Test.build/Objects-normal/arm64/Test.swiftsourceinfo"

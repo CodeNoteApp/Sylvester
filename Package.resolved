@@ -1,0 +1,50 @@
+{
+  "pins" : [
+    {
+      "identity" : "grmustache.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/groue/GRMustache.swift",
+      "state" : {
+        "branch" : "master",
+        "revision" : "476ab7b8024f5f99dd6c65b8eeb713d06fc87e56"
+      }
+    },
+    {
+      "identity" : "sourcekitten",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jpsim/SourceKitten",
+      "state" : {
+        "branch" : "main",
+        "revision" : "3b6a7ca66a01e84ac2b96bcb258606ae0f8cedff"
+      }
+    },
+    {
+      "identity" : "swift-argument-parser",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-argument-parser.git",
+      "state" : {
+        "revision" : "4ad606ba5d7673ea60679a61ff867cc1ff8c8e86",
+        "version" : "1.2.1"
+      }
+    },
+    {
+      "identity" : "swxmlhash",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/drmohundro/SWXMLHash.git",
+      "state" : {
+        "revision" : "4d0f62f561458cbe1f732171e625f03195151b60",
+        "version" : "7.0.1"
+      }
+    },
+    {
+      "identity" : "yams",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jpsim/Yams.git",
+      "state" : {
+        "revision" : "c7facc5ccb8c5a4577ea8c491aa875762cdee57a",
+        "version" : "5.0.3"
+      }
+    }
+  ],
+  "version" : 2
+}

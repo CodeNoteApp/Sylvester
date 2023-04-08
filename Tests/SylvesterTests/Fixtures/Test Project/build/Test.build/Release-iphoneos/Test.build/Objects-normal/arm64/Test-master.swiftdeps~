@@ -1,0 +1,9 @@
+version: "Apple Swift version 5.8 (swiftlang-5.8.0.124.2 clang-1403.0.22.11.100)"
+options: "c1fed20855efb32be65a706d7a97ad14a7815c566db04a826830e42f847bf7f2"
+build_start_time: [1680969529, 716747000]
+build_end_time: [1680969529, 742243000]
+inputs:
+  "/Volumes/Repositories/Private/Fork/Library/Sylvester/Tests/SylvesterTests/Fixtures/Test Project/Test/AProtocol.swift": !dirty [1674281583, 395334005]
+  "/Volumes/Repositories/Private/Fork/Library/Sylvester/Tests/SylvesterTests/Fixtures/Test Project/Test/AppDelegate.swift": !dirty [1674281583, 395431280]
+  "/Volumes/Repositories/Private/Fork/Library/Sylvester/Tests/SylvesterTests/Fixtures/Test Project/Test/DocSupportInputsMain.swift": !dirty [1680962961, 865354842]
+  "/Volumes/Repositories/Private/Fork/Library/Sylvester/Tests/SylvesterTests/Fixtures/Test Project/Test/ViewController.swift": !dirty [1680963799, 676470909]
