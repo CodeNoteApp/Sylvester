@@ -7,7 +7,7 @@
 //
 
 import SourceKittenFramework
-import SylvesterCommon
+@testable import Sylvester
 import XCTest
 
 class SKWrapperTests: SylvesterSecureCodingTestCase {

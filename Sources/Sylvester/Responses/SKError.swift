@@ -7,6 +7,7 @@
 //
 
 import SourceKittenFramework
+import Foundation
 
 public enum SKError: LocalizedError {
     /// Thrown when a SourceKit request fails.

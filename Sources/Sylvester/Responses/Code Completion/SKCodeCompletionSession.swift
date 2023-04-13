@@ -7,7 +7,7 @@
 //
 
 import SourceKittenFramework
-import SylvesterCommon
+
 
 /// Represents a _SourceKit_ code completion session, which can be filtered using update requests.
 open class SKCodeCompletionSession: NSObject {

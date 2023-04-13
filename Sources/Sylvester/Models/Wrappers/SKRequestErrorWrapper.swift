@@ -7,6 +7,7 @@
 //
 
 import SourceKittenFramework
+import Foundation
 
 @objc
 public class SKRequestErrorWrapper: NSObject, NSSecureCoding {

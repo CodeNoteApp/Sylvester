@@ -8,7 +8,7 @@
 
 import SourceKittenFramework
 
-open class SKGenericResponse<Substructure: SKBaseSubstructure>: NSObject, Codable, JSONDebugStringConvertible {
+open class SKGenericResponse<Substructure: SKBaseSubstructure>: NSObject, Codable, JSONDebugStringConvertible, SKResponse {
 
     // MARK: - Internal Declarations
 

@@ -8,7 +8,7 @@
 
 import XCTest
 import SourceKittenFramework
-import SylvesterCommon
+
 #if XPC
 @testable import SylvesterXPC
 #else

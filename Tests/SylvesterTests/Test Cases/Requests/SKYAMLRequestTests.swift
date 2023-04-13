@@ -7,7 +7,7 @@
 //
 
 import XCTest
-import SylvesterCommon
+
 #if XPC
 @testable import SylvesterXPC
 #else

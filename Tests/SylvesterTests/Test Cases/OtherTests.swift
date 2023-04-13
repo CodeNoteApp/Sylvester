@@ -13,7 +13,6 @@ import SourceKittenFramework
 #else
 @testable import Sylvester
 #endif
-@testable import SylvesterCommon
 
 class OtherTests: SylvesterMockEditorOpenTestCase {
 
@@ -44,7 +43,7 @@ class OtherTests: SylvesterMockEditorOpenTestCase {
     }
 
     func testRequestExtensions() {
-        var options = SylvesterCommon.SKCodeCompletionSessionOptions()
+        var options = SKCodeCompletionSessionOptions()
         options.filterText = "filterText"
 
         let fileWithPath = File(pathDeferringReading: "/a/path")

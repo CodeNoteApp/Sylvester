@@ -14,25 +14,17 @@ let package = Package(
             targets: ["Sylvester"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/jpsim/SourceKitten", branch: "main"),
+        .package(url: "https://github.com/Mx-Iris/SourceKitten", branch: "main"),
         .package(url: "https://github.com/groue/GRMustache.swift", branch: "master"),
     ],
     targets: [
         .target(
-            name: "SylvesterCommon",
-            dependencies: [
-                .product(name: "SourceKittenFramework", package: "SourceKitten"),
-            ],
-            path: "Sources/SylvesterCommon/"
-        ),
-        .target(
             name: "Sylvester",
             dependencies: [
-                "SylvesterCommon",
                 .product(name: "SourceKittenFramework", package: "SourceKitten"),
-            ],
-            path: "Sources/Sylvester/"
+            ]
         ),
+        
         .testTarget(
             name: "SylvesterTests",
             dependencies: ["Sylvester", .product(name: "Mustache", package: "GRMustache.swift")],

@@ -12,10 +12,10 @@
     {
       "identity" : "sourcekitten",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/jpsim/SourceKitten",
+      "location" : "https://github.com/Mx-Iris/SourceKitten",
       "state" : {
         "branch" : "main",
-        "revision" : "3b6a7ca66a01e84ac2b96bcb258606ae0f8cedff"
+        "revision" : "758db9fc02cd2707c5660e9ca53021780b798553"
       }
     },
     {
@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-argument-parser.git",
       "state" : {
-        "revision" : "4ad606ba5d7673ea60679a61ff867cc1ff8c8e86",
-        "version" : "1.2.1"
+        "revision" : "fee6933f37fde9a5e12a1e4aeaa93fe60116ff2a",
+        "version" : "1.2.2"
       }
     },
     {
@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/jpsim/Yams.git",
       "state" : {
-        "revision" : "c7facc5ccb8c5a4577ea8c491aa875762cdee57a",
-        "version" : "5.0.3"
+        "revision" : "f47ba4838c30dbd59998a4e4c87ab620ff959e8a",
+        "version" : "5.0.5"
       }
     }
   ],

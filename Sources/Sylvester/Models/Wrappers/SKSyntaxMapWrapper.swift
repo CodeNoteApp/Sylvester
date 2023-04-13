@@ -7,6 +7,7 @@
 //
 
 import SourceKittenFramework
+import Foundation
 
 @objc
 public class SKSyntaxMapWrapper: NSObject, NSSecureCoding {

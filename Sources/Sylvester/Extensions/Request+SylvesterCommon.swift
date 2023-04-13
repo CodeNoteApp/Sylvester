@@ -55,11 +55,7 @@ public extension Request {
 
     // MARK: - Code Completion Requests
 
-    static func codeCompletion(
-        file: File,
-        offset: Int,
-        compilerArguments: [String]
-    ) -> SourceKitObject {
+    static func codeCompletion(file: File, offset: Int, compilerArguments: [String]) -> SourceKitObject {
         let path = file.sourceKitPath
         var arguments = compilerArguments
 
@@ -85,12 +81,7 @@ public extension Request {
         return request
     }
 
-    static func codeCompletionOpen(
-        file: File,
-        offset: Int,
-        options: SKCodeCompletionSessionOptions?,
-        compilerArguments: [String]
-    ) -> SourceKitObject {
+    static func codeCompletionOpen(file: File, offset: Int, options: SKCodeCompletionSessionOptions?, compilerArguments: [String]) -> SourceKitObject {
         let path = file.sourceKitPath
         var arguments = compilerArguments
 
@@ -120,11 +111,7 @@ public extension Request {
         return request
     }
 
-    static func codeCompletionUpdate(
-        name: String,
-        offset: Int,
-        options: SKCodeCompletionSessionOptions?
-    ) -> SourceKitObject {
+    static func codeCompletionUpdate(name: String, offset: Int, options: SKCodeCompletionSessionOptions?) -> SourceKitObject {
         let request: SourceKitObject = [
             "key.request": UID("source.request.codecomplete.update"),
             "key.offset": Int64(offset),
@@ -148,13 +135,7 @@ public extension Request {
 
     // MARK: - Cursor Info Requests
 
-    static func cursorInfo(
-        file: File,
-        offset: Int?,
-        usr: String?,
-        compilerArguments: [String],
-        cancelOnSubsequentRequest: Bool
-    ) -> SourceKitObject {
+    static func cursorInfo(file: File, offset: Int?, usr: String?, compilerArguments: [String], cancelOnSubsequentRequest: Bool) -> SourceKitObject {
         let request: SourceKitObject = [
             "key.request": UID("source.request.cursorinfo"),
             "key.sourcefile": file.sourceKitPath,

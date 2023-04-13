@@ -6,7 +6,7 @@
 //  Copyright © 2018 Big Z Labs. All rights reserved.
 //
 
-import SylvesterCommon
+
 import SourceKittenFramework
 import XCTest
 

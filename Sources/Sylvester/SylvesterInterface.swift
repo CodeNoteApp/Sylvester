@@ -6,9 +6,10 @@
 //  Copyright © 2018 Big Z Labs. All rights reserved.
 //
 
-import SourceKittenFramework
-@_exported import SylvesterCommon
+@_exported import SourceKittenFramework
 @_exported import Foundation
+import Combine
+
 open class SylvesterInterface {
     // MARK: - Public Static Stored Properties
 
@@ -17,6 +18,14 @@ open class SylvesterInterface {
     // MARK: - Private Initializers
 
     private init() {}
+
+    public static let notification: Notification.Name = SourceKitDNotification
+
+    public var notificationPublisher: AnyPublisher<[String: SourceKitRepresentable], Never> {
+        NotificationCenter.default.publisher(for: Self.notification)
+            .compactMap { $0.object as? [String: SourceKitRepresentable] }
+            .eraseToAnyPublisher()
+    }
 
     // MARK: - Public SourceKitten Interface Methods
 
@@ -30,11 +39,7 @@ open class SylvesterInterface {
     ///   - path: The path to run `xcodebuild` from. Uses current path by default.
     /// - Returns: The resulting `Module`.
     /// - Throws: A `SKError`, if an error occurs.
-    public func moduleInfo(
-        xcodeBuildArguments: [String],
-        name: String? = nil,
-        in path: String
-    ) throws -> Module {
+    public func moduleInfo(xcodeBuildArguments: [String], name: String? = nil, in path: String) throws -> Module {
         return try SourceKittenAdapter.moduleInfo(
             xcodeBuildArguments: xcodeBuildArguments,
             name: name,
@@ -59,10 +64,9 @@ open class SylvesterInterface {
     /// - Parameter file: The source file to open.
     /// - Returns: The resulting `SKEditorOpen`.
     /// - Throws: A `SKError`, if an error occurs.
-    public func editorOpen<Substructure: SKBaseSubstructure>(file: File) throws
+    public func editorOpen<Substructure: SKBaseSubstructure>(file: File, compilerArguments: [String] = []) throws
         -> SKGenericEditorOpen<Substructure> {
-        let dataWrapper = try SourceKittenAdapter.editorOpen(file: file)
-
+        let dataWrapper = try SourceKittenAdapter.editorOpen(file: file, compilerArguments: compilerArguments)
         return try dataWrapper.decodeData()
     }
 
@@ -97,11 +101,7 @@ open class SylvesterInterface {
     ///   - compilerArguments: The compiler arguments used to build the module (e.g `["-sdk", "/path/to/sdk"]`).
     /// - Returns: The resulting `SKSwiftDocs`.
     /// - Throws: A `SKError`, if an error occurs.
-    public func swiftDocs<Substructure: SKBaseSubstructure>(
-        file: File,
-        compilerArguments: [String]
-    ) throws
-        -> SKGenericSwiftDocs<Substructure> {
+    public func swiftDocs<Substructure: SKBaseSubstructure>(file: File, compilerArguments: [String]) throws -> SKGenericSwiftDocs<Substructure> {
         let dataWrapper = try SourceKittenAdapter.swiftDocs(file: file, compilerArguments: compilerArguments)
 
         return try dataWrapper.decodeData()
@@ -114,12 +114,7 @@ open class SylvesterInterface {
     ///   - compilerArguments: The compiler arguments used to build the module (e.g `["-sdk", "/path/to/sdk"]`).
     /// - Returns: The resulting `SKSwiftDocs`.
     /// - Throws: A `SKError`, if an error occurs.
-    public func docInfo<Entity: SKBaseEntity>(
-        file: File?,
-        moduleName: String?,
-        compilerArguments: [String]
-    ) throws
-        -> SKGenericDocInfo<Entity> {
+    public func docInfo<Entity: SKBaseEntity>(file: File?, moduleName: String?, compilerArguments: [String]) throws -> SKGenericDocInfo<Entity> {
         let dataWrapper = try SourceKittenAdapter.docInfo(
             file: file,
             moduleName: moduleName,
@@ -139,11 +134,7 @@ open class SylvesterInterface {
     ///   - compilerArguments: The compiler arguments used to build the module (e.g `["-sdk", "/path/to/sdk"]`).
     /// - Returns: The resulting `SKCodeCompletion`.
     /// - Throws: A `SKError`, if an error occurs.
-    public func codeCompletion(
-        file: File,
-        offset: Offset,
-        compilerArguments: [String]
-    ) throws -> SKCodeCompletion {
+    public func codeCompletion(file: File, offset: Offset, compilerArguments: [String]) throws -> SKCodeCompletion {
         let dataWrapper = try SourceKittenAdapter.codeCompletion(
             file: file,
             offset: offset,
@@ -162,12 +153,7 @@ open class SylvesterInterface {
     ///   - compilerArguments: The compiler arguments used to build the module (e.g `["-sdk", "/path/to/sdk"]`).
     /// - Returns: The request's `SKCodeCompletionSession.Response`.
     /// - Throws: A `SKError`, if an error occurs.
-    public func codeCompletionOpen(
-        file: File,
-        offset: Offset,
-        options: SKCodeCompletionSession.Options?,
-        compilerArguments: [String]
-    ) throws -> SKCodeCompletionSession.Response {
+    public func codeCompletionOpen(file: File, offset: Offset, options: SKCodeCompletionSession.Options?, compilerArguments: [String]) throws -> SKCodeCompletionSession.Response {
         let dataWrapper = try SourceKittenAdapter.codeCompletionOpen(
             file: file,
             offset: offset,
@@ -189,12 +175,7 @@ open class SylvesterInterface {
     ///   - options: The `SKCodeCompletionSession.Options` of the update request.
     /// - Returns: The request's `SKCodeCompletionSession.Response`.
     /// - Throws: A `SKError`, if an error occurs.
-    public func codeCompletionUpdate(
-        file: File,
-        offset: Int,
-        options: SKCodeCompletionSession.Options?
-    )
-        throws -> SKCodeCompletionSession.Response {
+    public func codeCompletionUpdate(file: File, offset: Int, options: SKCodeCompletionSession.Options?) throws -> SKCodeCompletionSession.Response {
         let dataWrapper = try SourceKittenAdapter.codeCompletionUpdate(
             name: file.name,
             offset: offset,
@@ -236,13 +217,7 @@ open class SylvesterInterface {
     ///     made that uses the same AST. This behavior is a workaround for not having first-class cancelation.
     /// - Returns: The resulting `SKCursorInfo`, or `nil` if an invalid `offset` or `usr` was provided.
     /// - Throws: A `SKError`, if an error occurs.
-    public func cursorInfo(
-        file: File,
-        offset: Int?,
-        usr: String?,
-        compilerArguments: [String],
-        cancelOnSubsequentRequest: Bool
-    ) throws -> SKCursorInfo? {
+    public func cursorInfo(file: File, offset: Int?, usr: String?, compilerArguments: [String], cancelOnSubsequentRequest: Bool) throws -> SKCursorInfo? {
         assert(file.path != nil, "The cursor info request requires a valid source file path.")
 
         let dataWrapper = try SourceKittenAdapter.cursorInfo(
@@ -320,5 +295,19 @@ open class SylvesterInterface {
     ///            is true) output.
     public func launch(subprocess: SKSubprocess) throws -> String? {
         return SourceKittenAdapter.launch(subprocess: subprocess)
+    }
+
+    public func send<RequestType: SKRequest>(_ request: RequestType) throws -> RequestType.Response {
+        let sourcekitObject = request.sourcekitObject
+        let sourcekittenResponse: [String: SourceKitRepresentable]
+        do {
+            sourcekittenResponse = try Request.customRequest(request: sourcekitObject).send()
+        } catch let error as Request.Error {
+            throw SKError.sourceKitRequestFailed(error)
+        } catch {
+            throw SKError.unknown(error: error)
+        }
+        let dataWrapper = try SKDataWrapper(sourcekittenResponse)
+        return try dataWrapper.decodeData()
     }
 }

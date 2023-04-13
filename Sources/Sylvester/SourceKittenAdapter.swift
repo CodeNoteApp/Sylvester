@@ -7,17 +7,14 @@
 //
 
 import SourceKittenFramework
-@_exported import Foundation
+import Foundation
 
-public class SourceKittenAdapter {
-
+public enum SourceKittenAdapter {
     // MARK: - Module Methods
 
-    public static func moduleInfo(xcodeBuildArguments: [String],
-                                  name: String? = nil,
-                                  in path: String) throws -> Module {
+    public static func moduleInfo(xcodeBuildArguments: [String], name: String? = nil, in path: String) throws -> Module {
         guard let module = Module(xcodeBuildArguments: xcodeBuildArguments, name: name, inPath: path)
-            else { throw SKError.sourceKitRequestFailed(.unknown("`Module` initialization failed.")) }
+        else { throw SKError.sourceKitRequestFailed(.unknown("`Module` initialization failed.")) }
         return module
     }
 
@@ -31,11 +28,30 @@ public class SourceKittenAdapter {
 
     // MARK: - Editor Methods
 
-    public static func editorOpen(file: File) throws -> SKDataWrapper {
+    public static func editorOpen(file: File, compilerArguments: [String] = []) throws -> SKDataWrapper {
         let responseDictionary: [String: SourceKitRepresentable]
 
         do {
-            responseDictionary = try Request.editorOpen(file: file).send()
+            let sourcekitObject: SourceKitObject
+            if let path = file.path {
+                sourcekitObject = [
+                    "key.request": UID("source.request.editor.open"),
+                    "key.name": path,
+                    "key.sourcefile": path,
+                    "key.compilerargs": compilerArguments + [path]
+                ]
+            } else {
+                let name = String(abs(file.contents.hash))
+                sourcekitObject = [
+                    "key.request": UID("source.request.editor.open"),
+                    "key.name": name,
+                    "key.sourcetext": file.contents,
+                    "key.compilerargs": compilerArguments + [name]
+                ]
+            }
+            
+            let request = Request.customRequest(request: sourcekitObject)
+            responseDictionary = try request.send()
         } catch let error as Request.Error {
             throw SKError.sourceKitRequestFailed(error)
         } catch {
@@ -73,7 +89,7 @@ public class SourceKittenAdapter {
 
     public static func swiftDocs(file: File, compilerArguments: [String]) throws -> SKDataWrapper {
         guard let swiftDocs = SwiftDocs(file: file, arguments: compilerArguments)
-            else { throw SKError.sourceKitRequestFailed(Request.Error.unknown(nil)) }
+        else { throw SKError.sourceKitRequestFailed(Request.Error.unknown(nil)) }
 
         return try SKDataWrapper(object: swiftDocs)
     }
@@ -95,27 +111,22 @@ public class SourceKittenAdapter {
 
     // MARK: - Code Completion Methods
 
-    public static func codeCompletion(file: File,
-                                      offset: Int,
-                                      compilerArguments: [String]) throws -> SKDataWrapper {
+    public static func codeCompletion(file: File, offset: Int, compilerArguments: [String]) throws -> SKDataWrapper {
         let request = Request.codeCompletion(file: file, offset: offset, compilerArguments: compilerArguments)
         return try SKDataWrapper(customRequest(object: request))
     }
 
-    public static func codeCompletionOpen(file: File,
-                                          offset: Int,
-                                          options: SKCodeCompletionSessionOptions?,
-                                          compilerArguments: [String]) throws -> SKDataWrapper {
-        let openRequest = Request.codeCompletionOpen(file: file,
-                                                     offset: offset,
-                                                     options: options,
-                                                     compilerArguments: compilerArguments)
+    public static func codeCompletionOpen(file: File, offset: Int, options: SKCodeCompletionSessionOptions?, compilerArguments: [String]) throws -> SKDataWrapper {
+        let openRequest = Request.codeCompletionOpen(
+            file: file,
+            offset: offset,
+            options: options,
+            compilerArguments: compilerArguments
+        )
         return try SKDataWrapper(customRequest(object: openRequest))
     }
 
-    public static func codeCompletionUpdate(name: String,
-                                            offset: Int,
-                                            options: SKCodeCompletionSessionOptions?) throws -> SKDataWrapper {
+    public static func codeCompletionUpdate(name: String, offset: Int, options: SKCodeCompletionSessionOptions?) throws -> SKDataWrapper {
         let updateRequest = Request.codeCompletionUpdate(name: name, offset: offset, options: options)
         return try SKDataWrapper(customRequest(object: updateRequest))
     }
@@ -127,20 +138,18 @@ public class SourceKittenAdapter {
 
     // MARK: - Cursor Methods
 
-    public static func cursorInfo(file: File,
-                                  offset: Int?,
-                                  usr: String?,
-                                  compilerArguments: [String],
-                                  cancelOnSubsequentRequest: Bool) throws -> SKDataWrapper? {
-        let cursorInfoRequest = Request.cursorInfo(file: file,
-                                                   offset: offset,
-                                                   usr: usr,
-                                                   compilerArguments: compilerArguments,
-                                                   cancelOnSubsequentRequest: cancelOnSubsequentRequest)
+    public static func cursorInfo(file: File, offset: Int?, usr: String?, compilerArguments: [String], cancelOnSubsequentRequest: Bool) throws -> SKDataWrapper? {
+        let cursorInfoRequest = Request.cursorInfo(
+            file: file,
+            offset: offset,
+            usr: usr,
+            compilerArguments: compilerArguments,
+            cancelOnSubsequentRequest: cancelOnSubsequentRequest
+        )
         let responseDictionary = try customRequest(object: cursorInfoRequest)
 
         guard !responseDictionary.isEmpty
-            else { return nil }
+        else { return nil }
 
         return try SKDataWrapper(responseDictionary)
     }
@@ -199,7 +208,7 @@ public class SourceKittenAdapter {
             "clean",
             "build",
             "CODE_SIGN_IDENTITY=",
-            "CODE_SIGNING_REQUIRED=NO"
+            "CODE_SIGNING_REQUIRED=NO",
         ]
         subprocess.currentDirectoryURL = currentDirectoryURL
         subprocess.shouldPipeStandardError = true
@@ -230,5 +239,4 @@ public class SourceKittenAdapter {
         let data = file.readDataToEndOfFile()
         return String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines)
     }
-
 }

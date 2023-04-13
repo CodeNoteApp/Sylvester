@@ -9,7 +9,7 @@
 import SourceKittenFramework
 
 /// Represents a _SourceKit_ code completion request that provides code completion suggestions.
-open class SKCodeCompletion: Codable {
+open class SKCodeCompletion: Codable, SKResponse {
 
     // MARK: - Internal Declarations
 

@@ -7,6 +7,7 @@
 //
 
 import SourceKittenFramework
+import Foundation
 
 public enum SwiftDocsCodingKey: String, CodingKey {
     case file

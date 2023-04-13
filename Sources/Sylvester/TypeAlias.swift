@@ -6,9 +6,7 @@
 //  Copyright © 2018 Big Z Labs. All rights reserved.
 //
 
-import SylvesterCommon
-public typealias SKError = SylvesterCommon.SKError
-public typealias SKSubprocess = SylvesterCommon.SKSubprocess
+
 public typealias Offset = Int
 
 
