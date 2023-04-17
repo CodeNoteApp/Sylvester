@@ -27,6 +27,9 @@
 /// - Note: This class is not KVO-compliant. If you need this, please use subclasses of `DispatchedValue`.
 ///
 /// - SeeAlso: DispatchedValueWrapper
+
+import Foundation
+
 public class DispatchedValue<T>: DispatchedValueWrapper {
 
     /// The wrapped value type.

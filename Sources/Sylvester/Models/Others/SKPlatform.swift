@@ -1,6 +1,6 @@
 import Foundation
 
-public enum SKPlatform: String {
+public enum SKPlatform: String, CaseIterable, Hashable, Codable {
     case macOS = "macosx"
     case iOS = "iphoneos"
     case tvOS = "appletvos"
@@ -11,11 +11,6 @@ public enum SKPlatform: String {
     case iPhoneSimulator = "iphonesimulator"
 
     var sdkPath: String {
-        #if os(Linux)
-        // xcrun does not exist on Linux
-        return ""
-        #else
-        return SourceKittenAdapter.xcRun(arguments: ["--show-sdk-path", "--sdk", rawValue]) ?? ""
-        #endif
+        SourceKittenAdapter.xcRun(arguments: ["--show-sdk-path", "--sdk", rawValue]) ?? ""
     }
 }

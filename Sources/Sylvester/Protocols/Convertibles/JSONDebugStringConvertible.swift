@@ -6,17 +6,14 @@
 //  Copyright © 2019 Big Z Labs. All rights reserved.
 //
 
-
+import Foundation
 
 public protocol JSONDebugStringConvertible: Encodable, CustomDebugStringConvertible {
-
     var jsonDebugDescription: String { get }
-
 }
 
-extension JSONDebugStringConvertible {
-
-    public var jsonDebugDescription: String {
+public extension JSONDebugStringConvertible {
+    var jsonDebugDescription: String {
         do {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
@@ -26,15 +23,12 @@ extension JSONDebugStringConvertible {
             return (error as NSError).description
         }
     }
-
 }
 
 // MARK: - Custom Debug String Convertible Protocol
 
-extension JSONDebugStringConvertible {
-
-    public var debugDescription: String {
+public extension JSONDebugStringConvertible {
+    var debugDescription: String {
         return jsonDebugDescription
     }
-
 }

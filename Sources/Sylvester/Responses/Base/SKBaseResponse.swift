@@ -1,14 +1,17 @@
 //
-//  SKGenericResponse.swift
+//  SKBaseResponse.swift
 //  Sylvester 😼
 //
-//  Created by Chris Zielinski on 1/16/19.
-//  Copyright © 2019 Big Z Labs. All rights reserved.
+//  Created by Chris Zielinski on 6/11/18.
+//  Copyright © 2018 Big Z Labs. All rights reserved.
 //
 
+import Foundation
 import SourceKittenFramework
 
-open class SKGenericResponse<Substructure: SKBaseSubstructure>: NSObject, Codable, JSONDebugStringConvertible, SKResponse {
+open class SKBaseResponse: SKGenericResponse<SKSubstructure> {}
+
+open class SKGenericResponse<Substructure: SKBaseSubstructure>: NSObject, Codable, JSONDebugStringConvertible {
 
     // MARK: - Internal Declarations
 

@@ -1,16 +1,18 @@
 //
-//  SKGenericEditorOpen.swift
+//  SKEditorOpen.swift
 //  Sylvester 😼
 //
-//  Created by Chris Zielinski on 1/16/19.
-//  Copyright © 2019 Big Z Labs. All rights reserved.
+//  Created by Chris Zielinski on 12/3/18.
+//  Copyright © 2018 Big Z Labs. All rights reserved.
 //
 
 import SourceKittenFramework
 
+/// Represents a _SourceKit_ editor open request for a Swift file.
+open class SKEditorOpen: SKGenericEditorOpen<SKSubstructure> {}
+
 /// Represents a generic _SourceKit_ editor open request for a Swift file.
 open class SKGenericEditorOpen<Substructure: SKBaseSubstructure>: SKGenericResponse<Substructure> {
-
     // MARK: - Public Initializers
 
     /// Creates a new synchronous _SourceKit_ editor open request.
@@ -37,8 +39,7 @@ open class SKGenericEditorOpen<Substructure: SKBaseSubstructure>: SKGenericRespo
         try self.init(file: File(pathDeferringReading: filePath))
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
     }
-
 }

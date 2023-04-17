@@ -9,16 +9,16 @@
 import SourceKittenFramework
 import Foundation
 
-public enum SourceKittenAdapter {
+enum SourceKittenAdapter {
     // MARK: - Module Methods
 
-    public static func moduleInfo(xcodeBuildArguments: [String], name: String? = nil, in path: String) throws -> Module {
+    static func moduleInfo(xcodeBuildArguments: [String], name: String? = nil, in path: String) throws -> Module {
         guard let module = Module(xcodeBuildArguments: xcodeBuildArguments, name: name, inPath: path)
         else { throw SKError.sourceKitRequestFailed(.unknown("`Module` initialization failed.")) }
         return module
     }
 
-    public static func moduleDocs(module: Module) throws -> SKDataWrapper {
+    static func moduleDocs(module: Module) throws -> SKDataWrapper {
         do {
             return try SKDataWrapper(object: module.docs)
         } catch {
@@ -28,30 +28,12 @@ public enum SourceKittenAdapter {
 
     // MARK: - Editor Methods
 
-    public static func editorOpen(file: File, compilerArguments: [String] = []) throws -> SKDataWrapper {
+    static func editorOpen(file: File, compilerArguments: [String] = []) throws -> SKDataWrapper {
         let responseDictionary: [String: SourceKitRepresentable]
 
         do {
-            let sourcekitObject: SourceKitObject
-            if let path = file.path {
-                sourcekitObject = [
-                    "key.request": UID("source.request.editor.open"),
-                    "key.name": path,
-                    "key.sourcefile": path,
-                    "key.compilerargs": compilerArguments + [path]
-                ]
-            } else {
-                let name = String(abs(file.contents.hash))
-                sourcekitObject = [
-                    "key.request": UID("source.request.editor.open"),
-                    "key.name": name,
-                    "key.sourcetext": file.contents,
-                    "key.compilerargs": compilerArguments + [name]
-                ]
-            }
-            
-            let request = Request.customRequest(request: sourcekitObject)
-            responseDictionary = try request.send()
+            let customEditorOpenRequest = Request.editorOpen(file: file, compilerArguments: compilerArguments)
+            responseDictionary = try customRequest(object: customEditorOpenRequest)
         } catch let error as Request.Error {
             throw SKError.sourceKitRequestFailed(error)
         } catch {
@@ -61,7 +43,7 @@ public enum SourceKittenAdapter {
         return try SKDataWrapper(responseDictionary)
     }
 
-    public static func editorExtractTextFromComment(sourceText: String) throws -> SKDataWrapper {
+    static func editorExtractTextFromComment(sourceText: String) throws -> SKDataWrapper {
         let editorExtractTextFromCommentRequest = Request.editorExtractTextFromComment(sourceText: sourceText)
 
         do {
@@ -75,7 +57,7 @@ public enum SourceKittenAdapter {
 
     // MARK: - Syntax Methods
 
-    public static func syntaxMap(file: File) throws -> SyntaxMap {
+    static func syntaxMap(file: File) throws -> SyntaxMap {
         do {
             return try SyntaxMap(file: file)
         } catch let error as Request.Error {
@@ -87,14 +69,14 @@ public enum SourceKittenAdapter {
 
     // MARK: - Documentation Methods
 
-    public static func swiftDocs(file: File, compilerArguments: [String]) throws -> SKDataWrapper {
+    static func swiftDocs(file: File, compilerArguments: [String]) throws -> SKDataWrapper {
         guard let swiftDocs = SwiftDocs(file: file, arguments: compilerArguments)
         else { throw SKError.sourceKitRequestFailed(Request.Error.unknown(nil)) }
 
         return try SKDataWrapper(object: swiftDocs)
     }
 
-    public static func docInfo(file: File?, moduleName: String?, compilerArguments: [String]) throws -> SKDataWrapper {
+    static func docInfo(file: File?, moduleName: String?, compilerArguments: [String]) throws -> SKDataWrapper {
         let request = Request.docInfo(file: file, moduleName: moduleName, compilerArguments: compilerArguments)
         let responseDictionary: [String: SourceKitRepresentable]
 
@@ -111,12 +93,12 @@ public enum SourceKittenAdapter {
 
     // MARK: - Code Completion Methods
 
-    public static func codeCompletion(file: File, offset: Int, compilerArguments: [String]) throws -> SKDataWrapper {
+    static func codeCompletion(file: File, offset: Int, compilerArguments: [String]) throws -> SKDataWrapper {
         let request = Request.codeCompletion(file: file, offset: offset, compilerArguments: compilerArguments)
         return try SKDataWrapper(customRequest(object: request))
     }
 
-    public static func codeCompletionOpen(file: File, offset: Int, options: SKCodeCompletionSessionOptions?, compilerArguments: [String]) throws -> SKDataWrapper {
+    static func codeCompletionOpen(file: File, offset: Int, options: SKCodeCompletionSessionOptions?, compilerArguments: [String]) throws -> SKDataWrapper {
         let openRequest = Request.codeCompletionOpen(
             file: file,
             offset: offset,
@@ -126,19 +108,19 @@ public enum SourceKittenAdapter {
         return try SKDataWrapper(customRequest(object: openRequest))
     }
 
-    public static func codeCompletionUpdate(name: String, offset: Int, options: SKCodeCompletionSessionOptions?) throws -> SKDataWrapper {
+    static func codeCompletionUpdate(name: String, offset: Int, options: SKCodeCompletionSessionOptions?) throws -> SKDataWrapper {
         let updateRequest = Request.codeCompletionUpdate(name: name, offset: offset, options: options)
         return try SKDataWrapper(customRequest(object: updateRequest))
     }
 
-    public static func codeCompletionClose(name: String, offset: Int) throws {
+    static func codeCompletionClose(name: String, offset: Int) throws {
         let closeRequest = Request.codeCompletionClose(name: name, offset: offset)
         _ = try customRequest(object: closeRequest)
     }
 
     // MARK: - Cursor Methods
 
-    public static func cursorInfo(file: File, offset: Int?, usr: String?, compilerArguments: [String], cancelOnSubsequentRequest: Bool) throws -> SKDataWrapper? {
+    static func cursorInfo(file: File, offset: Int?, usr: String?, compilerArguments: [String], cancelOnSubsequentRequest: Bool) throws -> SKDataWrapper? {
         let cursorInfoRequest = Request.cursorInfo(
             file: file,
             offset: offset,
@@ -156,7 +138,7 @@ public enum SourceKittenAdapter {
 
     // MARK: Markup Methods
 
-    public static func convertMarkupToXML(sourceText: String) throws -> SKDataWrapper {
+    static func convertMarkupToXML(sourceText: String) throws -> SKDataWrapper {
         let convertMarkupToXMLRequest = Request.convertMarkupToXML(sourceText: sourceText)
 
         do {
@@ -170,7 +152,7 @@ public enum SourceKittenAdapter {
 
     // MARK: - Custom Request Methods
 
-    public static func customYAML(yaml: String) throws -> SKDataWrapper {
+    static func customYAML(yaml: String) throws -> SKDataWrapper {
         let responseDictionary: [String: SourceKitRepresentable]
 
         do {
@@ -196,13 +178,13 @@ public enum SourceKittenAdapter {
 
     // MARK: - Subprocess Methods
 
-    public static func xcRun(arguments: [String]) -> String? {
+    static func xcRun(arguments: [String]) -> String? {
         var subprocess = SKSubprocess(executableURL: URL(fileURLWithPath: "/usr/bin/xcrun", isDirectory: false))
         subprocess.arguments = arguments
         return launch(subprocess: subprocess)
     }
 
-    public static func xcodeBuild(arguments: [String], currentDirectoryURL: URL) -> String? {
+    static func xcodeBuild(arguments: [String], currentDirectoryURL: URL) -> String? {
         var subprocess = SKSubprocess(executableURL: URL(fileURLWithPath: "/usr/bin/xcodebuild", isDirectory: false))
         subprocess.arguments = arguments + [
             "clean",
@@ -215,14 +197,14 @@ public enum SourceKittenAdapter {
         return launch(subprocess: subprocess)
     }
 
-    public static func executeBash(_ command: String, currentDirectoryURL: URL? = nil) -> String? {
+    static func executeBash(_ command: String, currentDirectoryURL: URL? = nil) -> String? {
         var subprocess = SKSubprocess(executableURL: URL(fileURLWithPath: "/bin/bash", isDirectory: false))
         subprocess.arguments = ["-c", command]
         subprocess.currentDirectoryURL = currentDirectoryURL
         return launch(subprocess: subprocess)
     }
 
-    public static func launch(subprocess: SKSubprocess) -> String? {
+    static func launch(subprocess: SKSubprocess) -> String? {
         let process = subprocess.process
 
         let pipe = Pipe()

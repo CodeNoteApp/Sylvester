@@ -6,6 +6,8 @@
 //  Copyright © 2018 Big Z Labs. All rights reserved.
 //
 
+import Foundation
+
 open class SKChildren<Child: SKSequence>: Sequence {
 
     // MARK: - Public Stored Properties

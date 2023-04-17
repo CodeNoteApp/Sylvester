@@ -8,7 +8,7 @@
 import Foundation
 import SourceKittenFramework
 
-public class SKCursorInfoRequest: SKRequest {
+public class SKCursorInfoRequest: SKRequestType {
     public typealias Response = SKCursorInfo
     
     public var file: File

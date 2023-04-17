@@ -6,10 +6,7 @@
 //  Copyright © 2018 Big Z Labs. All rights reserved.
 //
 
-
-
 public struct SKParagraph {
-
     // MARK: - Internal Declarations
 
     enum CodingKeys: String, CodingKey {
@@ -28,13 +25,12 @@ public struct SKParagraph {
     public init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            paragraph = try container.decode(forKey: .paragraph)
+            self.paragraph = try container.decode(forKey: .paragraph)
         } catch {
             Utilities.print(error: error)
-            paragraph = ""
+            self.paragraph = ""
         }
     }
-
 }
 
 // MARK: - Codable Protocol

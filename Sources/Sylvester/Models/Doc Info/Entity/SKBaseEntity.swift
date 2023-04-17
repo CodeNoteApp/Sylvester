@@ -6,6 +6,8 @@
 //  Copyright © 2019 Big Z Labs. All rights reserved.
 //
 
+import Foundation
+
 /// Represents a structure of symbols (a class has its methods as sub-entities, etc.).
 ///
 /// This includes the function parameters and their types as entities. Each entity refers to the range of the

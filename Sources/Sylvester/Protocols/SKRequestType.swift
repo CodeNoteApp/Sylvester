@@ -8,7 +8,7 @@
 import Foundation
 import SourceKittenFramework
 
-public protocol SKRequest {
-    associatedtype Response: SKResponse
+public protocol SKRequestType {
+    associatedtype Response: Decodable
     var sourcekitObject: SourceKitObject { get }
 }

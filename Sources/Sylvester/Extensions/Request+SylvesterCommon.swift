@@ -27,6 +27,28 @@ public extension Request {
 
     // MARK: - Editor Requests
 
+    static func editorOpen(file: File, compilerArguments: [String]) -> SourceKitObject {
+        let sourcekitObject: SourceKitObject
+        if let path = file.path {
+            sourcekitObject = [
+                "key.request": UID("source.request.editor.open"),
+                "key.name": path,
+                "key.sourcefile": path,
+                "key.compilerargs": compilerArguments + [path]
+            ]
+        } else {
+            let name = String(abs(file.contents.hash))
+            sourcekitObject = [
+                "key.request": UID("source.request.editor.open"),
+                "key.name": name,
+                "key.sourcetext": file.contents,
+                "key.compilerargs": compilerArguments + [name]
+            ]
+        }
+        return sourcekitObject
+    }
+    
+    
     static func editorExtractTextFromComment(sourceText: String) -> SourceKitObject {
         return [
             "key.request": UID("source.request.editor.extract.comment"),

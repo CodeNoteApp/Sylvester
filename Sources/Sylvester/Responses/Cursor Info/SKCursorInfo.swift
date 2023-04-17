@@ -9,7 +9,7 @@
 import SourceKittenFramework
 
 /// Represents a _SourceKit_ cursor info request.
-open class SKCursorInfo: Codable, SKResponse {
+open class SKCursorInfo: Codable {
 
     // MARK: - Internal Declarations
 

@@ -6,6 +6,8 @@
 //  Copyright © 2019 Big Z Labs. All rights reserved.
 //
 
+import Foundation
+
 public protocol OptionalByteRangeConvertible {
 
     /// The byte offset of the entity inside the source contents.

@@ -13,7 +13,7 @@ import SourceKittenFramework
 public struct SKCodeCompletionSessionOptions: Codable {
 
     // MARK: - Internal Declarations
-
+    
     enum CodingKeys: String, CodingKey {
         case filterText = "key.codecomplete.filtertext"
         case requestStart = "key.codecomplete.requeststart"

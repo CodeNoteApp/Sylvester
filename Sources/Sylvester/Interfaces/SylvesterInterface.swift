@@ -6,8 +6,8 @@
 //  Copyright © 2018 Big Z Labs. All rights reserved.
 //
 
-@_exported import SourceKittenFramework
-@_exported import Foundation
+import SourceKittenFramework
+import Foundation
 import Combine
 
 open class SylvesterInterface {
@@ -15,15 +15,17 @@ open class SylvesterInterface {
 
     public static let shared: SylvesterInterface = .init()
 
+    public static let notification: Notification.Name = SourceKitDNotification
+    
     // MARK: - Private Initializers
 
     private init() {}
-
-    public static let notification: Notification.Name = SourceKitDNotification
-
-    public var notificationPublisher: AnyPublisher<[String: SourceKitRepresentable], Never> {
+    
+    public var notificationPublisher: AnyPublisher<SKNotification, SKError> {
         NotificationCenter.default.publisher(for: Self.notification)
             .compactMap { $0.object as? [String: SourceKitRepresentable] }
+            .tryMap { try SKDataWrapper($0).decodeData() }
+            .mapError { $0.toSKError() }
             .eraseToAnyPublisher()
     }
 
@@ -297,11 +299,25 @@ open class SylvesterInterface {
         return SourceKittenAdapter.launch(subprocess: subprocess)
     }
 
-    public func send<RequestType: SKRequest>(_ request: RequestType) throws -> RequestType.Response {
+    public func sendSync<RequestType: SKRequestType>(_ request: RequestType) throws -> RequestType.Response {
         let sourcekitObject = request.sourcekitObject
         let sourcekittenResponse: [String: SourceKitRepresentable]
         do {
             sourcekittenResponse = try Request.customRequest(request: sourcekitObject).send()
+        } catch let error as Request.Error {
+            throw SKError.sourceKitRequestFailed(error)
+        } catch {
+            throw SKError.unknown(error: error)
+        }
+        let dataWrapper = try SKDataWrapper(sourcekittenResponse)
+        return try dataWrapper.decodeData()
+    }
+
+    public func sendAsync<RequestType: SKRequestType>(_ request: RequestType) async throws -> RequestType.Response {
+        let sourcekitObject = request.sourcekitObject
+        let sourcekittenResponse: [String: SourceKitRepresentable]
+        do {
+            sourcekittenResponse = try await Request.customRequest(request: sourcekitObject).asyncSend()
         } catch let error as Request.Error {
             throw SKError.sourceKitRequestFailed(error)
         } catch {

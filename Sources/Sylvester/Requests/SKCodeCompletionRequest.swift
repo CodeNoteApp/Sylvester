@@ -8,22 +8,22 @@
 import Foundation
 import SourceKittenFramework
 
-class SKCodeCompletionRequest: SKRequest {
-    typealias Response = SKCodeCompletion
+public class SKCodeCompletionRequest: SKRequestType {
+    public typealias Response = SKCodeCompletion
 
-    var file: File
+    public var file: File
 
-    var offset: Offset
+    public var offset: Offset
 
-    var compilerArguments: [String]
+    public var compilerArguments: [String]
 
-    init(file: File, offset: Offset, compilerArguments: [String]) {
+    public init(file: File, offset: Offset, compilerArguments: [String]) {
         self.file = file
         self.offset = offset
         self.compilerArguments = compilerArguments
     }
 
-    var sourcekitObject: SourceKitObject {
+    public var sourcekitObject: SourceKitObject {
         let path = file.sourceKitPath
         var arguments = compilerArguments
 

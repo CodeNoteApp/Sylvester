@@ -11,13 +11,13 @@
 /// It refers to the text via `offset + length` entries. This includes syntactic annotations (e.g. keywords) and
 /// semantic ones. The semantic ones include the name and Unified Symbol Resolution (USR) of the referenced symbol.
 open class SKAnnotation: SKGenericKindEntity<SKAnnotation.Kind> {
-
     // MARK: - Internal Declarations
 
     enum CodingKeys: String, CodingKey {
         case kind = "key.kind"
         case name = "key.name"
         case usr = "key.usr"
+        case privateIsSystem = "key.is_system"
     }
 
     // MARK: - Public Type Aliases
@@ -32,15 +32,24 @@ open class SKAnnotation: SKGenericKindEntity<SKAnnotation.Kind> {
     /// The Unified Symbol Resolution (USR) string for the entity.
     public let usr: String?
 
+    /// Whether the token is a member of a system module.
+    ///
+    /// This property stores the decoded value. Use `isSystem` for retrieval.
+    private let privateIsSystem: Bool?
+    
+    /// Whether the token is a member of a system module.
+    public var isSystem: Bool {
+        return privateIsSystem == nil ? false : privateIsSystem!
+    }
+
     // MARK: - Public Initializers
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        name = try container.decodeIfPresent(forKey: .name)
-        usr = try container.decodeIfPresent(forKey: .usr)
-
+        self.name = try container.decodeIfPresent(forKey: .name)
+        self.usr = try container.decodeIfPresent(forKey: .usr)
+        self.privateIsSystem = try container.decodeIfPresent(forKey: .privateIsSystem)
         try super.init(from: decoder)
-
         kind = try container.decode(forKey: .kind)
     }
 
@@ -51,29 +60,29 @@ open class SKAnnotation: SKGenericKindEntity<SKAnnotation.Kind> {
         try container.encode(kind, forKey: .kind)
         try container.encode(name, forKey: .name)
         try container.encode(usr, forKey: .usr)
-
+        try container.encode(privateIsSystem, forKey: .privateIsSystem)
         try super.encode(to: encoder)
     }
 
     // MARK: - Equatable Protocol
 
     open override func isEqual(to rhs: SKByteRange) -> Bool {
-        guard let annotation = rhs as? SKAnnotation
-            else { return false }
-        return name == annotation.name && usr == annotation.usr && super.isEqual(to: rhs)
+        guard let annotation = rhs as? SKAnnotation else { return false }
+        return name == annotation.name
+            && usr == annotation.usr
+            && privateIsSystem == annotation.privateIsSystem
+            && super.isEqual(to: rhs)
     }
-
 }
 
 // MARK: - SKSortedEntities<SKAnnotation> Methods
 
-extension SKSortedEntities where Entity: SKAnnotation {
-
+public extension SKSortedEntities where Entity: SKAnnotation {
     /// Returns the annotation with the specified kind, or `nil` if nonexistent.
     ///
     /// - Parameter kind: The kind of the annotation to return.
     /// - Returns: The `SKAnnotation`, or `nil` if nonexistent.
-    public func annotation(with kind: SKAnnotation.Kind) -> SKAnnotation? {
+    func annotation(with kind: SKAnnotation.Kind) -> SKAnnotation? {
         return entities.first(where: { $0.kind == kind })
     }
 
@@ -81,8 +90,7 @@ extension SKSortedEntities where Entity: SKAnnotation {
     ///
     /// - Parameter kind: The kind of the annotation.
     /// - Returns: `true` if the annotation kind is a member of the entities; otherwise, `false`.
-    public func containsAnnotation(with kind: SKAnnotation.Kind) -> Bool {
+    func containsAnnotation(with kind: SKAnnotation.Kind) -> Bool {
         return annotation(with: kind) != nil
     }
-
 }

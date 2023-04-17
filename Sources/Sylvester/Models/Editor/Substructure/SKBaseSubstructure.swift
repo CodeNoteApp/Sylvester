@@ -6,6 +6,8 @@
 //  Copyright © 2019 Big Z Labs. All rights reserved.
 //
 
+import Foundation
+
 // swiftlint:disable line_length
 /// Represents the structure of a symbol.
 ///
@@ -49,7 +51,7 @@
 /// ```
 ///
 open class SKBaseSubstructure: NSObject, SKSequence {
-// swiftlint:enable line_length
+    // swiftlint:enable line_length
 
     // MARK: - Internal Declarations
 
@@ -230,65 +232,61 @@ open class SKBaseSubstructure: NSObject, SKSequence {
 
     // MARK: - Public Initializers
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        accessibility = try container.decodeIfPresent(forKey: .accessibility)
-        annotatedDeclaration = try container.decodeIfPresent(forKey: .annotatedDeclaration)
-        attributes = try container.decodeIfPresent(forKey: .attributes)
-        bodyOffset = try container.decodeIfPresent(forKey: .bodyOffset)
-        bodyLength = try container.decodeIfPresent(forKey: .bodyLength)
-        docColumn = try container.decodeIfPresent(forKey: .docColumn)
-        docComment = try container.decodeIfPresent(forKey: .docComment)
-        docDeclaration = try container.decodeIfPresent(forKey: .docDeclaration)
-        docFile = try container.decodeIfPresent(forKey: .docFile)
-        docFullAsXML = try container.decodeIfPresent(forKey: .docFullAsXML)
-        docLine = try container.decodeIfPresent(forKey: .docLine)
-        docName = try container.decodeIfPresent(forKey: .docName)
-        docParameters = try container.decodeIfPresent(forKey: .docParameters)
-        docType = try container.decodeIfPresent(forKey: .docType)
-        docOffset = try container.decodeIfPresent(forKey: .docOffset)
-        docLength = try container.decodeIfPresent(forKey: .docLength)
-        elements = try container.decodeIfPresent(forKey: .elements)
-        filePath = try container.decodeIfPresent(forKey: .filePath)
-        fullyAnnotatedDeclaration = try container.decodeIfPresent(forKey: .fullyAnnotatedDeclaration)
-        inheritedTypes = try container.decodeIfPresent(forKey: .inheritedTypes)
+        self.accessibility = try container.decodeIfPresent(forKey: .accessibility)
+        self.annotatedDeclaration = try container.decodeIfPresent(forKey: .annotatedDeclaration)
+        self.attributes = try container.decodeIfPresent(forKey: .attributes)
+        self.bodyOffset = try container.decodeIfPresent(forKey: .bodyOffset)
+        self.bodyLength = try container.decodeIfPresent(forKey: .bodyLength)
+        self.docColumn = try container.decodeIfPresent(forKey: .docColumn)
+        self.docComment = try container.decodeIfPresent(forKey: .docComment)
+        self.docDeclaration = try container.decodeIfPresent(forKey: .docDeclaration)
+        self.docFile = try container.decodeIfPresent(forKey: .docFile)
+        self.docFullAsXML = try container.decodeIfPresent(forKey: .docFullAsXML)
+        self.docLine = try container.decodeIfPresent(forKey: .docLine)
+        self.docName = try container.decodeIfPresent(forKey: .docName)
+        self.docParameters = try container.decodeIfPresent(forKey: .docParameters)
+        self.docType = try container.decodeIfPresent(forKey: .docType)
+        self.docOffset = try container.decodeIfPresent(forKey: .docOffset)
+        self.docLength = try container.decodeIfPresent(forKey: .docLength)
+        self.elements = try container.decodeIfPresent(forKey: .elements)
+        self.filePath = try container.decodeIfPresent(forKey: .filePath)
+        self.fullyAnnotatedDeclaration = try container.decodeIfPresent(forKey: .fullyAnnotatedDeclaration)
+        self.inheritedTypes = try container.decodeIfPresent(forKey: .inheritedTypes)
 
-        kind = try container.decode(forKey: .kind)
-        offset = try container.decode(forKey: .offset)
-        length = try container.decode(forKey: .length)
+        self.kind = try container.decode(forKey: .kind)
+        self.offset = try container.decode(forKey: .offset)
+        self.length = try container.decode(forKey: .length)
 
-        name = try container.decodeIfPresent(forKey: .name)
-        nameOffset = try container.decodeIfPresent(forKey: .nameOffset)
-        nameLength = try container.decodeIfPresent(forKey: .nameLength)
-        parsedDeclaration = try container.decodeIfPresent(forKey: .parsedDeclaration)
-        parsedScopeEnd = try container.decodeIfPresent(forKey: .parsedScopeEnd)
-        parsedScopeStart = try container.decodeIfPresent(forKey: .parsedScopeStart)
-        runtimeName = try container.decodeIfPresent(forKey: .runtimeName)
-        overrides = try container.decodeIfPresent(forKey: .overrides)
-        setterAccessibility = try container.decodeIfPresent(forKey: .setterAccessibility)
-        typeName = try container.decodeIfPresent(forKey: .typeName)
-        typeUSR = try container.decodeIfPresent(forKey: .typeUSR)
-        usr = try container.decodeIfPresent(forKey: .usr)
+        self.name = try container.decodeIfPresent(forKey: .name)
+        self.nameOffset = try container.decodeIfPresent(forKey: .nameOffset)
+        self.nameLength = try container.decodeIfPresent(forKey: .nameLength)
+        self.parsedDeclaration = try container.decodeIfPresent(forKey: .parsedDeclaration)
+        self.parsedScopeEnd = try container.decodeIfPresent(forKey: .parsedScopeEnd)
+        self.parsedScopeStart = try container.decodeIfPresent(forKey: .parsedScopeStart)
+        self.runtimeName = try container.decodeIfPresent(forKey: .runtimeName)
+        self.overrides = try container.decodeIfPresent(forKey: .overrides)
+        self.setterAccessibility = try container.decodeIfPresent(forKey: .setterAccessibility)
+        self.typeName = try container.decodeIfPresent(forKey: .typeName)
+        self.typeUSR = try container.decodeIfPresent(forKey: .typeUSR)
+        self.usr = try container.decodeIfPresent(forKey: .usr)
 
         super.init()
 
-        internalChildren = try decodeChildren(from: container)
+        self.internalChildren = try decodeChildren(from: container)
     }
 
     // MARK: - Public Lazy Stored Properties
 
     /// Whether the substructure has a body (i.e. `bodyOffset` and `bodyLength` are non-nil).
-    open lazy var hasBody: Bool = {
-        return bodyByteRange != nil
-    }()
+    open lazy var hasBody: Bool = bodyByteRange != nil
 
     /// The byte range of the substructure (i.e. `offset` and `length`).
     ///
     /// Unlike `contentByteRange`, this range does not include the attributes.
-    open lazy var byteRange: NSRange = {
-        return NSRange(location: offset, length: length)
-    }()
+    open lazy var byteRange: NSRange = .init(location: offset, length: length)
 
     /// The byte range of the substructure's name (i.e. `nameOffset` and `nameLength`).
     ///
@@ -296,16 +294,16 @@ open class SKBaseSubstructure: NSObject, SKSequence {
     /// parenthesis `)`, including the generic parameter clause `<...>`.
     open lazy var nameByteRange: NSRange? = {
         guard let nameOffset = nameOffset,
-            let nameLength = nameLength,
-            nameOffset != 0 && nameLength != 0
-            else { return nil }
+              let nameLength = nameLength,
+              nameOffset != 0, nameLength != 0
+        else { return nil }
         return NSRange(location: nameOffset, length: nameLength)
     }()
 
     /// The byte range of the substructure's body (i.e. `bodyOffset` and `bodyLength`).
     open lazy var bodyByteRange: NSRange? = {
         guard let bodyOffset = bodyOffset, let bodyLength = bodyLength
-            else { return nil }
+        else { return nil }
         return NSRange(location: bodyOffset, length: bodyLength)
     }()
 
@@ -320,31 +318,28 @@ open class SKBaseSubstructure: NSObject, SKSequence {
             startingOffset = offset
         }
 
-        return NSRange(startingOffset..<(offset + length))
+        return NSRange(startingOffset ..< (offset + length))
     }()
 
     /// Whether the substructure is a function-kind and has a return type.
-    open lazy var isReturningFunction: Bool = {
-        return functionReturnType != nil
-    }()
+    open lazy var isReturningFunction: Bool = functionReturnType != nil
 
     /// Returns the return type (`typeName`) of a function-kind substructure.
     open lazy var functionReturnType: String? = {
         guard isFunction
-            else { return nil }
+        else { return nil }
         return typeName
     }()
 
     // swiftlint:disable:next todo
     /// Whether the substructure is a mark delimiter, which are `TODO`, `FIXME`, and `MARK`.
-    open lazy var isMark: Bool = {
-        return kind == .commentMark
-    }()
+    open lazy var isMark: Bool = kind == .commentMark
 
     /// Whether the substructure is a protocol or protocol extension.
     open lazy var isProtocol: Bool = {
         switch kind {
-        case .protocol, .extensionProtocol:
+        case .protocol,
+             .extensionProtocol:
             return true
         default:
             return false
@@ -361,7 +356,10 @@ open class SKBaseSubstructure: NSObject, SKSequence {
     ///
     open lazy var isClass: Bool = {
         switch kind {
-        case .class, .varClass, .extensionClass, .functionMethodClass:
+        case .class,
+             .varClass,
+             .extensionClass,
+             .functionMethodClass:
             return true
         default:
             return false
@@ -379,7 +377,11 @@ open class SKBaseSubstructure: NSObject, SKSequence {
     ///
     open lazy var isExtension: Bool = {
         switch kind {
-        case .extension, .extensionClass, .extensionEnum, .extensionStruct, .extensionProtocol:
+        case .extension,
+             .extensionClass,
+             .extensionEnum,
+             .extensionStruct,
+             .extensionProtocol:
             return true
         default:
             return false
@@ -397,7 +399,11 @@ open class SKBaseSubstructure: NSObject, SKSequence {
     ///
     open lazy var isVariable: Bool = {
         switch kind {
-        case .varLocal, .varInstance, .varClass, .varStatic, .varGlobal:
+        case .varLocal,
+             .varInstance,
+             .varClass,
+             .varStatic,
+             .varGlobal:
             return true
         default:
             return false
@@ -414,7 +420,10 @@ open class SKBaseSubstructure: NSObject, SKSequence {
     ///
     open lazy var isFunction: Bool = {
         switch kind {
-        case .functionMethodInstance, .functionMethodClass, .functionMethodStatic, .functionFree:
+        case .functionMethodInstance,
+             .functionMethodClass,
+             .functionMethodStatic,
+             .functionFree:
             return true
         default:
             return false
@@ -422,14 +431,10 @@ open class SKBaseSubstructure: NSObject, SKSequence {
     }()
 
     /// Whether the substructure is an overridden function.
-    open lazy var isOverride: Bool = {
-        return attributes?.containsAttribute(with: .override) ?? false
-    }()
+    open lazy var isOverride: Bool = attributes?.containsAttribute(with: .override) ?? false
 
     /// Whether the substructure's parent is a protocol declaration.
-    open lazy var isInsideProtocolDeclaration: Bool = {
-        return internalParent?.kind == .protocol
-    }()
+    open lazy var isInsideProtocolDeclaration: Bool = internalParent?.kind == .protocol
 
     // MARK: - SKSequence Protocol Methods
 
@@ -446,9 +451,11 @@ open class SKBaseSubstructure: NSObject, SKSequence {
     ///   - container: The decoding container.
     /// - Returns: The children substructures decoded as a specified type.
     /// - Throws: A `DecodingError`.
-    public func decodeChildren<Substructure: SKBaseSubstructure>(_ type: Substructure.Type,
-                                                                 from container: DecodingContainer) throws
-                                                                -> [Substructure]? {
+    public func decodeChildren<Substructure: SKBaseSubstructure>(
+        _ type: Substructure.Type,
+        from container: DecodingContainer
+    ) throws
+        -> [Substructure]? {
         return try container.decodeIfPresent([Substructure].self, forKey: .internalChildren)
     }
 
@@ -474,7 +481,7 @@ open class SKBaseSubstructure: NSObject, SKSequence {
 
     open override func isEqual(_ object: Any?) -> Bool {
         guard let rhs = object as? SKBaseSubstructure
-            else { return false }
+        else { return false }
 
         return offset == rhs.offset
             && accessibility == rhs.accessibility
@@ -512,7 +519,6 @@ open class SKBaseSubstructure: NSObject, SKSequence {
             && typeUSR == rhs.typeUSR
             && usr == rhs.usr
     }
-
 }
 
 // MARK: - JSON Debug String Convertible Protocol
