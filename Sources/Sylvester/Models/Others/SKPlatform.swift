@@ -10,7 +10,7 @@ public enum SKPlatform: String, CaseIterable, Hashable, Codable {
     case watchSimulator = "watchsimulator"
     case iPhoneSimulator = "iphonesimulator"
 
-    var sdkPath: String {
+    public var sdkPath: String {
         SourceKittenAdapter.xcRun(arguments: ["--show-sdk-path", "--sdk", rawValue]) ?? ""
     }
 }
