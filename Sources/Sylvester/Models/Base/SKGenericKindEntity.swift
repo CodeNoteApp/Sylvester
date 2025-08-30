@@ -1,17 +1,10 @@
-//
-//  SKGenericKindEntity.swift
-//  Sylvester 😼
-//
-//  Created by Chris Zielinski on 1/29/19.
-//  Copyright © 2019 Big Z Labs. All rights reserved.
-//
+import SylvesterEnumerations
 
-open class SKGenericKindEntity<Kind: Equatable>: SKByteRange {
-
+open class SKGenericKindEntity<Kind: Equatable & Codable>: SKByteRange {
     // MARK: - Public Stored Properties
 
     /// The kind of the entity.
-    public var kind: Kind!
+    public let kind: Kind
 
     // MARK: - Public Initializers
 
@@ -21,8 +14,16 @@ open class SKGenericKindEntity<Kind: Equatable>: SKByteRange {
         super.init(offset: offset, length: length)
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.kind = try container.decode(Kind.self, forKey: .init(stringValue: Self.kindCodingKey.rawValue))
         try super.init(from: decoder)
+    }
+
+    public override func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(kind, forKey: .init(stringValue: Self.kindCodingKey.rawValue))
+        try super.encode(to: encoder)
     }
 
     // MARK: - Equatable Protocol
@@ -37,4 +38,22 @@ open class SKGenericKindEntity<Kind: Equatable>: SKByteRange {
         return isSuperEqual && kind == entity.kind
     }
 
+    open class var kindCodingKey: SKKey {
+        .kind
+    }
+
+    private struct CodingKeys: CodingKey {
+        var stringValue: String
+
+        init(stringValue: String) {
+            self.stringValue = stringValue
+        }
+
+        var intValue: Int?
+
+        init?(intValue: Int) {
+            self.intValue = intValue
+            self.stringValue = "\(intValue)"
+        }
+    }
 }

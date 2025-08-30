@@ -12,6 +12,7 @@ import XCTest
 #else
 @testable import Sylvester
 #endif
+import SylvesterEnumerations
 
 class SourceKitUIDProtocolTests: XCTestCase {
 

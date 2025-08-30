@@ -1,15 +1,11 @@
-//
-//  SKCodeCompletionRequest.swift
-//
-//
-//  Created by JH on 2023/4/13.
-//
-
 import Foundation
 import SourceKittenFramework
+import SylvesterEnumerations
 
 public class SKCodeCompletionRequest: SKRequestType {
     public typealias Response = SKCodeCompletion
+
+    public var requestKind: SKRequest { .codecomplete }
 
     public var file: File
 
@@ -30,9 +26,8 @@ public class SKCodeCompletionRequest: SKRequestType {
         if !compilerArguments.contains("-c") {
             arguments.insert(contentsOf: ["-c", path], at: 0)
         }
-
         let request: SourceKitObject = [
-            "key.request": UID("source.request.codecomplete"),
+            #key(.request): UID("source.request.codecomplete"),
             "key.sourcefile": path,
             "key.compilerargs": arguments,
             "key.offset": Int64(offset),

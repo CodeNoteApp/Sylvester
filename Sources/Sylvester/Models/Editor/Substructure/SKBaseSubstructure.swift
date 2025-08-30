@@ -1,12 +1,6 @@
-//
-//  SKBaseSubstructure.swift
-//  Sylvester 😼
-//
-//  Created by Chris Zielinski on 1/18/19.
-//  Copyright © 2019 Big Z Labs. All rights reserved.
-//
-
 import Foundation
+import MetaCodable
+import SylvesterEnumerations
 
 // swiftlint:disable line_length
 /// Represents the structure of a symbol.
@@ -50,7 +44,8 @@ import Foundation
 /// }
 /// ```
 ///
-open class SKBaseSubstructure: NSObject, SKSequence {
+// @Codable
+open class SKBaseSubstructure: SKSequence {
     // swiftlint:enable line_length
 
     // MARK: - Internal Declarations
@@ -272,9 +267,6 @@ open class SKBaseSubstructure: NSObject, SKSequence {
         self.typeName = try container.decodeIfPresent(forKey: .typeName)
         self.typeUSR = try container.decodeIfPresent(forKey: .typeUSR)
         self.usr = try container.decodeIfPresent(forKey: .usr)
-
-        super.init()
-
         self.internalChildren = try decodeChildren(from: container)
     }
 
@@ -477,47 +469,42 @@ open class SKBaseSubstructure: NSObject, SKSequence {
         return try decodeChildren(SKBaseSubstructure.self, from: container)
     }
 
-    // MARK: - Overridden NSObject Methods
-
-    open override func isEqual(_ object: Any?) -> Bool {
-        guard let rhs = object as? SKBaseSubstructure
-        else { return false }
-
-        return offset == rhs.offset
-            && accessibility == rhs.accessibility
-            && annotatedDeclaration == rhs.annotatedDeclaration
-            && attributes == rhs.attributes
-            && bodyOffset == rhs.bodyOffset
-            && bodyLength == rhs.bodyLength
-            && docColumn == rhs.docColumn
-            && docComment == rhs.docComment
-            && docDeclaration == rhs.docDeclaration
-            && docFile == rhs.docFile
-            && docFullAsXML == rhs.docFullAsXML
-            && docLine == rhs.docLine
-            && docName == rhs.docName
-            && docParameters == rhs.docParameters
-            && docType == rhs.docType
-            && docOffset == rhs.docOffset
-            && docLength == rhs.docLength
-            && elements == rhs.elements
-            && fullyAnnotatedDeclaration == rhs.fullyAnnotatedDeclaration
-            && inheritedTypes == rhs.inheritedTypes
-            && kind == rhs.kind
-            && length == rhs.length
-            && name == rhs.name
-            && nameOffset == rhs.nameOffset
-            && nameLength == rhs.nameLength
-            && parsedDeclaration == rhs.parsedDeclaration
-            && parsedScopeEnd == rhs.parsedScopeEnd
-            && parsedScopeStart == rhs.parsedScopeStart
-            && runtimeName == rhs.runtimeName
-            && overrides == rhs.overrides
-            && setterAccessibility == rhs.setterAccessibility
-            && internalChildren == rhs.internalChildren
-            && typeName == rhs.typeName
-            && typeUSR == rhs.typeUSR
-            && usr == rhs.usr
+    public static func == (lhs: SKBaseSubstructure, rhs: SKBaseSubstructure) -> Bool {
+        return lhs.offset == rhs.offset
+            && lhs.accessibility == rhs.accessibility
+            && lhs.annotatedDeclaration == rhs.annotatedDeclaration
+            && lhs.attributes == rhs.attributes
+            && lhs.bodyOffset == rhs.bodyOffset
+            && lhs.bodyLength == rhs.bodyLength
+            && lhs.docColumn == rhs.docColumn
+            && lhs.docComment == rhs.docComment
+            && lhs.docDeclaration == rhs.docDeclaration
+            && lhs.docFile == rhs.docFile
+            && lhs.docFullAsXML == rhs.docFullAsXML
+            && lhs.docLine == rhs.docLine
+            && lhs.docName == rhs.docName
+            && lhs.docParameters == rhs.docParameters
+            && lhs.docType == rhs.docType
+            && lhs.docOffset == rhs.docOffset
+            && lhs.docLength == rhs.docLength
+            && lhs.elements == rhs.elements
+            && lhs.fullyAnnotatedDeclaration == rhs.fullyAnnotatedDeclaration
+            && lhs.inheritedTypes == rhs.inheritedTypes
+            && lhs.kind == rhs.kind
+            && lhs.length == rhs.length
+            && lhs.name == rhs.name
+            && lhs.nameOffset == rhs.nameOffset
+            && lhs.nameLength == rhs.nameLength
+            && lhs.parsedDeclaration == rhs.parsedDeclaration
+            && lhs.parsedScopeEnd == rhs.parsedScopeEnd
+            && lhs.parsedScopeStart == rhs.parsedScopeStart
+            && lhs.runtimeName == rhs.runtimeName
+            && lhs.overrides == rhs.overrides
+            && lhs.setterAccessibility == rhs.setterAccessibility
+            && lhs.internalChildren == rhs.internalChildren
+            && lhs.typeName == rhs.typeName
+            && lhs.typeUSR == rhs.typeUSR
+            && lhs.usr == rhs.usr
     }
 }
 

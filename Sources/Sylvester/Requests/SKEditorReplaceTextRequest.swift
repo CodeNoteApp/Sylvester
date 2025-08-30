@@ -7,12 +7,15 @@
 
 import Foundation
 import SourceKittenFramework
+import SylvesterEnumerations
 
 public class SKEditorReplaceTextRequest: SKGenericEditorReplaceTextRequest<SKSubstructure> {}
 
 public class SKGenericEditorReplaceTextRequest<Substructure: SKBaseSubstructure>: SKRequestType {
     public typealias Response = SKGenericEditorReplaceText<SKBaseSubstructure>
 
+    public var requestKind: SKRequest { .editorReplacetext }
+    
     public var name: String
 
     public var offset: Int
@@ -30,7 +33,7 @@ public class SKGenericEditorReplaceTextRequest<Substructure: SKBaseSubstructure>
 
     public var sourcekitObject: SourceKitObject {
         [
-            "key.request": SKRequest.editorReplacetext,
+            "key.request": requestKind,
             "key.name": name,
             "key.offset": offset,
             "key.length": length,

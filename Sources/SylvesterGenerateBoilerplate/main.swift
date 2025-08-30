@@ -1,5 +1,6 @@
-import Foundation
+import AppKit
 import OrderedCollections
+import CaseAnything
 
 let ignore: Set<String> = ["source.lang.swift.stmt"]
 let prefixes: Set<String> = ["NS", "UI", "LLDB", "IB", "GK"]
@@ -274,74 +275,178 @@ extension String {
     var uppercaseFirstLetter: String {
         return String(first!).uppercased() + String(dropFirst())
     }
+    
+    var isRawIdentifier: Bool {
+        return self.hasPrefix("`") && self.hasSuffix("`")
+    }
+    
+    var rawIdentifierStripped: String {
+        guard isRawIdentifier else { return self }
+        return String(self.dropFirst().dropLast())
+    }
+}
+
+// A class to handle complex word segmentation using a dictionary-based approach.
+class WordSegmenter {
+    
+    // Use the system's spell checker to verify if a substring is a valid word.
+    private let spellChecker = NSSpellChecker.shared
+    
+    init() {
+        // You can set the language for the spell checker if needed.
+        // For programming terms, English is usually the best choice.
+        // spellChecker.setLanguage("en_US")
+    }
+    
+    /// Converts a concatenated string (like "codecompleteRequeststart") into camelCase.
+    /// - Parameter input: The string to convert.
+    /// - Returns: A camelCased string.
+    func convertToLowerCamelCase(_ input: String) -> String {
+        // 1. First, split the string by existing capital letters (e.g., "MyClass" -> ["My", "Class"]).
+        // This is a powerful first pass.
+        let preSegmented = preSegmentByCase(input)
+        
+        var finalWords: [String] = []
+        
+        // 2. For each pre-segmented part, perform dictionary-based segmentation.
+        for part in preSegmented {
+            // If a part is all uppercase (like "URL"), it's likely an acronym. Keep it as one word.
+            if part.allSatisfy({ $0.isUppercase }) {
+                finalWords.append(part.lowercased())
+            } else {
+                // Otherwise, use the dictionary to split it further.
+                let segmentedByDictionary = segmentWithDictonary(part.lowercased())
+                finalWords.append(contentsOf: segmentedByDictionary)
+            }
+        }
+        
+        // 3. Combine the words into lowerCamelCase format.
+        guard let firstWord = finalWords.first else {
+            return ""
+        }
+        
+        let remainingWords = finalWords.dropFirst().map { $0.capitalized }
+        
+        return ([firstWord.lowercased()] + remainingWords).joined()
+    }
+    
+    /// Pre-segments a string based on case changes.
+    /// Example: "codecompleteRequestStart" -> ["codecomplete", "Request", "Start"]
+    private func preSegmentByCase(_ string: String) -> [String] {
+        // This regex finds a lowercase letter followed by an uppercase letter
+        // and inserts a space between them.
+        let pattern = "([a-z])([A-Z])"
+        let regex = try! NSRegularExpression(pattern: pattern, options: [])
+        let range = NSRange(location: 0, length: string.count)
+        let spacedString = regex.stringByReplacingMatches(in: string, options: [], range: range, withTemplate: "$1 $2")
+        
+        return spacedString.components(separatedBy: " ")
+    }
+    
+    /// Segments a lowercase string using a greedy dictionary-based algorithm.
+    /// It finds the longest valid word from the beginning of the string.
+    /// Example: "codecomplete" -> ["code", "complete"]
+    private func segmentWithDictonary(_ s: String) -> [String] {
+        var words: [String] = []
+        var currentIndex = s.startIndex
+        
+        while currentIndex < s.endIndex {
+            // Find the longest valid word starting from the current index.
+            var bestMatchEndIndex = s.index(after: currentIndex)
+            
+            for i in (1...s.distance(from: currentIndex, to: s.endIndex)).reversed() {
+                let endIndex = s.index(currentIndex, offsetBy: i)
+                let substring = String(s[currentIndex..<endIndex])
+                
+                // Check if the substring is a known word.
+                // The range(of:) check is a simple way to see if the word is "correct".
+                // For technical terms, this might not be perfect.
+                let range = spellChecker.checkSpelling(of: substring, startingAt: 0)
+                
+                // NSRange(location: NSNotFound, length: 0) means the word is correct.
+                if range.location == NSNotFound {
+                    bestMatchEndIndex = endIndex
+                    break
+                }
+            }
+            
+            // Add the found word to our list.
+            let foundWord = String(s[currentIndex..<bestMatchEndIndex])
+            words.append(foundWord)
+            
+            // Move the index to the end of the found word.
+            currentIndex = bestMatchEndIndex
+        }
+        
+        return words
+    }
 }
 
 extension String {
-    
-       // MARK: - Public API
+    // MARK: - Public API
 
-       /// Converts a string from snake_case or other delimited formats to camelCase.
-       /// This is a convenience property that defaults to using the underscore `_` as the separator.
-       ///
-       ///     "__my_internal_var".camelCased -> "__myInternalVar"
-       ///
-       var camelCased: String {
-           return self.camelCased(separators: "_")
-       }
+    /// Converts a string from snake_case or other delimited formats to camelCase.
+    /// This is a convenience property that defaults to using the underscore `_` as the separator.
+    ///
+    ///     "__my_internal_var".camelCased -> "__myInternalVar"
+    ///
+    var camelCased: String {
+        return self.camelCased(separators: "_")
+    }
 
-       /// Converts a string from a delimited format to camelCase, using a custom string of separators.
-       ///
-       /// - Parameter separators: A string containing all characters to be treated as separators (e.g., "-_").
-       /// - Returns: The camelCased version of the string.
-       ///
-       ///     "__my-internal_var".camelCased(separators: "-_") -> "__myInternalVar"
-       ///
-       func camelCased(separators: String) -> String {
-           return self.camelCased(separators: Set(separators))
-       }
+    /// Converts a string from a delimited format to camelCase, using a custom string of separators.
+    ///
+    /// - Parameter separators: A string containing all characters to be treated as separators (e.g., "-_").
+    /// - Returns: The camelCased version of the string.
+    ///
+    ///     "__my-internal_var".camelCased(separators: "-_") -> "__myInternalVar"
+    ///
+    func camelCased(separators: String) -> String {
+        return camelCased(separators: Set(separators))
+    }
 
-       // MARK: - Core Logic
+    // MARK: - Core Logic
 
-       /// Converts a string from a delimited format to camelCase, using a custom set of separator characters.
-       /// This is the core implementation. It preserves any leading separator characters.
-       ///
-       /// - Parameter separators: A set of characters to be treated as separators.
-       /// - Returns: The camelCased version of the string.
-       private func camelCased(separators: Set<Character>) -> String {
-           // 1. Find the index of the first character that is NOT a separator.
-           guard let firstNonSeparatorIndex = self.firstIndex(where: { !separators.contains($0) }) else {
-               // If no such character exists, the string is either empty or consists only of separators.
-               return self
-           }
+    /// Converts a string from a delimited format to camelCase, using a custom set of separator characters.
+    /// This is the core implementation. It preserves any leading separator characters.
+    ///
+    /// - Parameter separators: A set of characters to be treated as separators.
+    /// - Returns: The camelCased version of the string.
+    private func camelCased(separators: Set<Character>) -> String {
+        // 1. Find the index of the first character that is NOT a separator.
+        guard let firstNonSeparatorIndex = firstIndex(where: { !separators.contains($0) }) else {
+            // If no such character exists, the string is either empty or consists only of separators.
+            return self
+        }
 
-           // 2. Separate the leading separators from the rest of the string.
-           let leadingSeparators = self[..<firstNonSeparatorIndex]
-           let stringToProcess = self[firstNonSeparatorIndex...]
+        // 2. Separate the leading separators from the rest of the string.
+        let leadingSeparators = self[..<firstNonSeparatorIndex]
+        let stringToProcess = self[firstNonSeparatorIndex...]
 
-           // 3. Split the main part of the string by any of the specified separators.
-           let components = stringToProcess.split(whereSeparator: { separators.contains($0) })
-                                           .filter { !$0.isEmpty }
+        // 3. Split the main part of the string by any of the specified separators.
+        let components = stringToProcess.split(whereSeparator: { separators.contains($0) })
+            .filter { !$0.isEmpty }
 
-           // 4. If there are no valid components, return just the leading separators.
-           guard let first = components.first else {
-               return String(leadingSeparators)
-           }
-           
-           // 5. If there's only one component, no further transformation is needed for the core part.
-           if components.count == 1 {
-               return String(leadingSeparators) + String(first)
-           }
+        // 4. If there are no valid components, return just the leading separators.
+        guard let first = components.first else {
+            return String(leadingSeparators)
+        }
 
-           // 6. Capitalize the remaining components.
-           let remainingComponents = components.dropFirst()
-           let capitalizedRemaining = remainingComponents.map { $0.capitalized }
+        // 5. If there's only one component, no further transformation is needed for the core part.
+        if components.count == 1 {
+            return String(leadingSeparators) + String(first)
+        }
 
-           // 7. Join the first component (with its original casing) and the capitalized remaining components.
-           let camelCasedCore = String(first) + capitalizedRemaining.joined()
+        // 6. Capitalize the remaining components.
+        let remainingComponents = components.dropFirst()
+        let capitalizedRemaining = remainingComponents.map { $0.capitalized }
 
-           // 8. Prepend the leading separators back to the final result.
-           return String(leadingSeparators) + camelCasedCore
-       }
+        // 7. Join the first component (with its original casing) and the capitalized remaining components.
+        let camelCasedCore = String(first) + capitalizedRemaining.joined()
+
+        // 8. Prepend the leading separators back to the final result.
+        return String(leadingSeparators) + camelCasedCore
+    }
 }
 
 struct Boilerplate {
@@ -400,7 +505,9 @@ struct Boilerplate {
                 name = name.lowercased()
             }
 
-            name = name.camelCased(separators: "-_")
+//            name = WordSegmenter().convertToLowerCamelCase(name.camelCased(separators: "-_"))
+            name = camelCase(name.camelCased(separators: "-_"), keepSpecialCharacters: true)
+            
 
             guard !keywords.contains(name)
             else { return "`\(name)`" }
@@ -497,7 +604,7 @@ struct Boilerplate {
         let customProtocols = enumerationCaseProtocols.isEmpty
             ? ""
             : ", " + enumerationCaseProtocols.joined(separator: " ,")
-        let enumerationConformingProtocols = "String, Equatable, Codable, "
+        let enumerationConformingProtocols = "String, Equatable, Codable, CodingKey, "
             + "CaseIterable, SourceKitUID\(customProtocols)"
 
         var enumerationCases = ""
@@ -512,6 +619,33 @@ struct Boilerplate {
             """ }.joined(separator: "\n")
         }
 
+        enumerationCases += "\n\n"
+        enumerationCases += "    @_spi(Macro)\n    public static var caseMap: [String: String] {\n"
+        for (index, uidSet) in uidSets.enumerated() {
+            if index == 0 {
+                enumerationCases += "        [\n"
+            }
+
+            for uid in uidSet {
+                guard let name = uid.name else { continue }
+                enumerationCases += """
+                        \"\(name)\": \"\(uid.key)\",
+                """
+                if name.isRawIdentifier {
+                    enumerationCases += "\n"
+                    enumerationCases += """
+                            \"\(name.rawIdentifierStripped)\": \"\(uid.key)\",
+                    """
+                }
+                enumerationCases += "\n"
+            }
+            
+//            enumerationCases += uidSet.filter { $0.hasName }.map { """
+//                    \"\($0.name!)\": \"\($0.key)\",
+//            """ }.joined(separator: "\n")
+            
+        }
+        enumerationCases += "        ]\n    }"
         let enumDeclaration = """
         //  \(enumerationName).swift
         //  Sylvester 😼
@@ -525,7 +659,7 @@ struct Boilerplate {
         }
         """
 
-        let currentDirectoryURL = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().appendingPathComponent("Sylvester/Enumerations/Generated")
+        let currentDirectoryURL = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().appendingPathComponent("SylvesterEnumerations/Generated")
         let outputURL = URL(
             fileURLWithPath: "\(enumerationName).swift",
             isDirectory: false,

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SylvesterEnumerations
 
 extension Dictionary where Key == String {
     subscript(key: SKKey) -> Value? {

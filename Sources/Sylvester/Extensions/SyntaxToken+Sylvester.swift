@@ -7,6 +7,7 @@
 //
 
 import SourceKittenFramework
+import SylvesterEnumerations
 
 extension SyntaxToken {
 

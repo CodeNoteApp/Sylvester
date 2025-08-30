@@ -36,7 +36,6 @@ open class SKByteRange: Codable, Equatable {
     public static func == (lhs: SKByteRange, rhs: SKByteRange) -> Bool {
         return lhs.isEqual(to: rhs)
     }
-
 }
 
 // MARK: - Byte Range Convertible Protocol

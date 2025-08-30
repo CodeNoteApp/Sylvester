@@ -53,7 +53,7 @@ extension Module: Codable {
 
 }
 
-extension Module: Equatable {
+extension Module: @retroactive Equatable {
 
     public static func == (lhs: Module, rhs: Module) -> Bool {
         return lhs.name == rhs.name

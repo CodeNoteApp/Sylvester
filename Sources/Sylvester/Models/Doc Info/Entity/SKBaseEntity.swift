@@ -1,19 +1,11 @@
-//
-//  SKBaseDocInfoEntity.swift
-//  Sylvester 😼
-//
-//  Created by Chris Zielinski on 1/28/19.
-//  Copyright © 2019 Big Z Labs. All rights reserved.
-//
-
 import Foundation
+import SylvesterEnumerations
 
 /// Represents a structure of symbols (a class has its methods as sub-entities, etc.).
 ///
 /// This includes the function parameters and their types as entities. Each entity refers to the range of the
 /// original text via `offset + length` entries.
-open class SKBaseEntity: NSObject, SKSequence {
-
+open class SKBaseEntity: SKSequence {
     // MARK: - Internal Declarations
 
     public enum CodingKeys: String, CodingKey {
@@ -75,24 +67,22 @@ open class SKBaseEntity: NSObject, SKSequence {
 
     // MARK: - Public Initializers
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        kind = try container.decode(forKey: .kind)
-        name = try container.decodeIfPresent(forKey: .name)
-        keyword = try container.decodeIfPresent(forKey: .keyword)
-        usr = try container.decodeIfPresent(forKey: .usr)
-        offset = try container.decodeIfPresent(forKey: .offset)
-        length = try container.decodeIfPresent(forKey: .length)
-        fullyAnnotatedDeclaration = try container.decodeIfPresent(forKey: .fullyAnnotatedDeclaration)
-        docFullAsXML = try container.decodeIfPresent(forKey: .docFullAsXML)
-        inherits = try container.decodeIfPresent(forKey: .inherits)
-        genericRequirements = try container.decodeIfPresent(forKey: .genericRequirements)
-        genericParameters = try container.decodeIfPresent(forKey: .genericParameters)
+        self.kind = try container.decode(forKey: .kind)
+        self.name = try container.decodeIfPresent(forKey: .name)
+        self.keyword = try container.decodeIfPresent(forKey: .keyword)
+        self.usr = try container.decodeIfPresent(forKey: .usr)
+        self.offset = try container.decodeIfPresent(forKey: .offset)
+        self.length = try container.decodeIfPresent(forKey: .length)
+        self.fullyAnnotatedDeclaration = try container.decodeIfPresent(forKey: .fullyAnnotatedDeclaration)
+        self.docFullAsXML = try container.decodeIfPresent(forKey: .docFullAsXML)
+        self.inherits = try container.decodeIfPresent(forKey: .inherits)
+        self.genericRequirements = try container.decodeIfPresent(forKey: .genericRequirements)
+        self.genericParameters = try container.decodeIfPresent(forKey: .genericParameters)
 
-        super.init()
-
-        internalChildren = try decodeChildren(from: container)
+        self.internalChildren = try decodeChildren(from: container)
     }
 
     // MARK: - SKSequence Protocol Methods
@@ -111,8 +101,8 @@ open class SKBaseEntity: NSObject, SKSequence {
     /// - Returns: The children substructures decoded as a specified type.
     /// - Throws: A `DecodingError`.
     public func decodeChildren<Entity: SKBaseEntity>(_ type: Entity.Type, from container: DecodingContainer) throws
-                                                    -> [Entity]? {
-            return try container.decodeIfPresent([Entity].self, forKey: .internalChildren)
+        -> [Entity]? {
+        return try container.decodeIfPresent([Entity].self, forKey: .internalChildren)
     }
 
     /// Decodes the children entities from a decoding container.
@@ -133,26 +123,20 @@ open class SKBaseEntity: NSObject, SKSequence {
         return try decodeChildren(SKBaseEntity.self, from: container)
     }
 
-    // MARK: - Overridden NSObject Methods
-
-    open override func isEqual(_ object: Any?) -> Bool {
-        guard let rhs = object as? SKBaseEntity
-            else { return false }
-
-        return offset == rhs.offset
-            && length == rhs.length
-            && kind == rhs.kind
-            && name == rhs.name
-            && keyword == rhs.keyword
-            && usr == rhs.usr
-            && fullyAnnotatedDeclaration == rhs.fullyAnnotatedDeclaration
-            && docFullAsXML == rhs.docFullAsXML
-            && inherits == rhs.inherits
-            && genericRequirements == rhs.genericRequirements
-            && genericParameters == rhs.genericParameters
-            && internalChildren == rhs.internalChildren
+    public static func == (lhs: SKBaseEntity, rhs: SKBaseEntity) -> Bool {
+        return lhs.offset == rhs.offset
+            && lhs.length == rhs.length
+            && lhs.kind == rhs.kind
+            && lhs.name == rhs.name
+            && lhs.keyword == rhs.keyword
+            && lhs.usr == rhs.usr
+            && lhs.fullyAnnotatedDeclaration == rhs.fullyAnnotatedDeclaration
+            && lhs.docFullAsXML == rhs.docFullAsXML
+            && lhs.inherits == rhs.inherits
+            && lhs.genericRequirements == rhs.genericRequirements
+            && lhs.genericParameters == rhs.genericParameters
+            && lhs.internalChildren == rhs.internalChildren
     }
-
 }
 
 // MARK: - Optional Byte Range Convertible Protocol

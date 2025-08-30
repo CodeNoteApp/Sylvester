@@ -6,6 +6,8 @@
 //  Copyright © 2019 Big Z Labs. All rights reserved.
 //
 
+import SylvesterEnumerations
+
 public struct SKInherit {
 
     // MARK: - Internal Declarations

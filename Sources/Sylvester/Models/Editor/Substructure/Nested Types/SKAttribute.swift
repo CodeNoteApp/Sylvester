@@ -6,6 +6,9 @@
 //  Copyright © 2018 Big Z Labs. All rights reserved.
 //
 
+import MetaCodable
+import SylvesterEnumerations
+
 open class SKAttribute: SKGenericKindEntity<SKAttribute.Kind> {
 
     // MARK: - Internal Declarations
@@ -18,34 +21,12 @@ open class SKAttribute: SKGenericKindEntity<SKAttribute.Kind> {
 
     public typealias Kind = SKAttributeKind
 
-    // MARK: - Public Initializers
-
-    override public init(kind: Kind, offset: Int, length: Int) {
-        super.init(kind: kind, offset: offset, length: length)
-    }
-
-    required public init(from decoder: Decoder) throws {
-        try super.init(from: decoder)
-
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        kind = try container.decode(forKey: .attribute)
-    }
-
-    // MARK: - Overridden Methods
-
-    open override func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(kind, forKey: .attribute)
-
-        try super.encode(to: encoder)
-    }
-
+    open override class var kindCodingKey: SKKey { .attribute }
 }
 
 // MARK: - SKSortedEntities<SKAttribute> Methods
 
 extension SKSortedEntities where Entity: SKAttribute {
-
     /// Returns the attribute with the specified kind, or `nil` if nonexistent.
     ///
     /// - Parameter kind: The kind of the attribute to return.
@@ -61,5 +42,4 @@ extension SKSortedEntities where Entity: SKAttribute {
     public func containsAttribute(with kind: SKAttribute.Kind) -> Bool {
         return attribute(with: kind) != nil
     }
-
 }

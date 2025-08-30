@@ -7,6 +7,7 @@
 
 import Foundation
 import SourceKittenFramework
+import SylvesterEnumerations
 
 public class SKNotification: Codable {
     // MARK: - Public Type Aliases

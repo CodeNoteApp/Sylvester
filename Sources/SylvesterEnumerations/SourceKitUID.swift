@@ -11,10 +11,10 @@ public protocol SourceKitUID: RawRepresentable, CustomStringConvertible where Se
 
 // MARK: - Custom String Convertible Protocol
 
-extension SourceKitUID {
-
-    public var description: String {
-        return rawValue
-    }
-
-}
+//extension SourceKitUID {
+//
+//    public var description: String {
+//        return rawValue
+//    }
+//
+//}

@@ -7,6 +7,7 @@
 //
 
 import SourceKittenFramework
+import MetaCodable
 
 /// Represents a _SourceKit_ editor open request for a Swift file.
 open class SKEditorOpen: SKGenericEditorOpen<SKSubstructure> {}
@@ -38,8 +39,8 @@ open class SKGenericEditorOpen<Substructure: SKBaseSubstructure>: SKGenericRespo
     public convenience init(filePath: String) throws {
         try self.init(file: File(pathDeferringReading: filePath))
     }
-
-    public required init(from decoder: Decoder) throws {
+    
+    public required init(from decoder: any Decoder) throws {
         try super.init(from: decoder)
     }
 }

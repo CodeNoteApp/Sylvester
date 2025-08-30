@@ -1,14 +1,5 @@
-//
-//  SKEditorExtractTextFromComment.swift
-//  Sylvester 😼
-//
-//  Created by Chris Zielinski on 3/4/19.
-//  Copyright © 2019 Big Z Labs. All rights reserved.
-//
-
 /// Represents a _SourceKit_ editor text extraction request.
 open class SKEditorExtractTextFromComment: SKSourceTextResponse {
-
     // MARK: - Public Initializers
 
     /// Creates a new synchronous _SourceKit_ editor text extraction request.
@@ -26,5 +17,4 @@ open class SKEditorExtractTextFromComment: SKSourceTextResponse {
     public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
     }
-
 }

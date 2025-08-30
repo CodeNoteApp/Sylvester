@@ -7,6 +7,7 @@
 //
 
 import SourceKittenFramework
+import SylvesterEnumerations
 
 /// Represents a _SourceKit_ cursor info request.
 open class SKCursorInfo: Codable {

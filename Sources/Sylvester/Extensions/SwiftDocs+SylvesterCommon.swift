@@ -14,7 +14,7 @@ public enum SwiftDocsCodingKey: String, CodingKey {
     case response
 }
 
-extension SwiftDocs: Encodable {
+extension SwiftDocs: @retroactive Encodable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: SwiftDocsCodingKey.self)

@@ -1,14 +1,5 @@
-//
-//  SKYAMLRequest.swift
-//  Sylvester 😼
-//
-//  Created by Chris Zielinski on 12/10/18.
-//  Copyright © 2018 Big Z Labs. All rights reserved.
-//
-
 /// Represents a _SourceKit_ YAML request.
 open class SKYAMLRequest<Response: Decodable> {
-
     // MARK: - Public Stored Properties
 
     /// The response from the _SourceKit_ YAML request.
@@ -24,7 +15,6 @@ open class SKYAMLRequest<Response: Decodable> {
     ///   - yaml: The _SourceKit_ request in YAML representation.
     /// - Throws: A `SKError`, if an error occurs.
     public init(yaml: String) throws {
-        response = try SylvesterInterface.shared.customYAML(yaml)
+        self.response = try SylvesterInterface.shared.customYAML(yaml)
     }
-
 }

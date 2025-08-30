@@ -7,10 +7,13 @@
 
 import Foundation
 import SourceKittenFramework
+import SylvesterEnumerations
 
 public class SKEditorExtractCommentRequest: SKRequestType {
     public typealias Response = SKSourceTextResponse
 
+    public var requestKind: SKRequest { .editorExtractComment }
+    
     public var sourceText: String
 
     public init(sourceText: String) {
@@ -19,7 +22,7 @@ public class SKEditorExtractCommentRequest: SKRequestType {
 
     public var sourcekitObject: SourceKitObject {
         return [
-            "key.request": UID("source.request.editor.extract.comment"),
+            "key.request": requestKind,
             "key.sourcetext": sourceText,
         ]
     }

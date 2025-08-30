@@ -1,51 +1,16 @@
-//
-//  SKElement.swift
-//  Sylvester 😼
-//
-//  Created by Chris Zielinski on 12/5/18.
-//  Copyright © 2018 Big Z Labs. All rights reserved.
-//
+import SylvesterEnumerations
 
-open class SKElement: SKGenericKindEntity<SKElement.Kind> {
-
-    // MARK: - Internal Declarations
-
-    enum CodingKeys: String, CodingKey {
-        case kind = "key.kind"
-    }
-
+open class SKElement: SKGenericKindEntity<SKElementKind> {
     // MARK: - Public Type Aliases
 
     public typealias Kind = SKElementKind
 
-    // MARK: - Public Initializers
-
-    override public init(kind: Kind, offset: Int, length: Int) {
-        super.init(kind: kind, offset: offset, length: length)
-    }
-
-    required public init(from decoder: Decoder) throws {
-        try super.init(from: decoder)
-
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        kind = try container.decode(forKey: .kind)
-    }
-
-    // MARK: - Overridden Methods
-
-    open override func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(kind, forKey: .kind)
-
-        try super.encode(to: encoder)
-    }
-
+    open override class var kindCodingKey: SKKey { .kind }
 }
 
 // MARK: - SKSortedEntities<SKElement> Methods
 
 extension SKSortedEntities where Entity: SKElement {
-
     /// Returns the element with the specified kind, or `nil` if nonexistent.
     ///
     /// - Parameter kind: The kind of the element to return.
@@ -61,5 +26,4 @@ extension SKSortedEntities where Entity: SKElement {
     public func containsElement(with kind: SKElement.Kind) -> Bool {
         return element(with: kind) != nil
     }
-
 }

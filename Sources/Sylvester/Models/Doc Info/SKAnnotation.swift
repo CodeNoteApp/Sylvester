@@ -6,11 +6,13 @@
 //  Copyright © 2019 Big Z Labs. All rights reserved.
 //
 
+import SylvesterEnumerations
+
 /// Represents an annotation for the token of source text.
 ///
 /// It refers to the text via `offset + length` entries. This includes syntactic annotations (e.g. keywords) and
 /// semantic ones. The semantic ones include the name and Unified Symbol Resolution (USR) of the referenced symbol.
-open class SKAnnotation: SKGenericKindEntity<SKAnnotation.Kind> {
+open class SKAnnotation: SKGenericKindEntity<SKSourceKind> {
     // MARK: - Internal Declarations
 
     enum CodingKeys: String, CodingKey {
@@ -50,7 +52,6 @@ open class SKAnnotation: SKGenericKindEntity<SKAnnotation.Kind> {
         self.usr = try container.decodeIfPresent(forKey: .usr)
         self.privateIsSystem = try container.decodeIfPresent(forKey: .privateIsSystem)
         try super.init(from: decoder)
-        kind = try container.decode(forKey: .kind)
     }
 
     // MARK: - Overridden Methods

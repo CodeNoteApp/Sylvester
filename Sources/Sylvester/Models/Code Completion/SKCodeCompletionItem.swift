@@ -6,6 +6,8 @@
 //  Copyright © 2018 Big Z Labs. All rights reserved.
 //
 
+import SylvesterEnumerations
+
 public struct SKCodeCompletionItem {
 
     // MARK: - Internal Declarations

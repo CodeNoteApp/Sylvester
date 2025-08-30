@@ -1,18 +1,10 @@
-//
-//  SKBaseResponse.swift
-//  Sylvester 😼
-//
-//  Created by Chris Zielinski on 6/11/18.
-//  Copyright © 2018 Big Z Labs. All rights reserved.
-//
-
 import Foundation
 import SourceKittenFramework
+import SylvesterEnumerations
 
 open class SKBaseResponse: SKGenericResponse<SKSubstructure> {}
 
-open class SKGenericResponse<Substructure: SKBaseSubstructure>: NSObject, Codable, JSONDebugStringConvertible {
-
+open class SKGenericResponse<Substructure: SKBaseSubstructure>: Codable, JSONDebugStringConvertible {
     // MARK: - Internal Declarations
 
     enum CodingKeys: String, CodingKey {
@@ -43,11 +35,13 @@ open class SKGenericResponse<Substructure: SKBaseSubstructure>: NSObject, Codabl
 
     // MARK: - Public Initializers
 
-    public init(diagnosticStage: DiagnosticStage,
-                length: Int,
-                offset: Int,
-                substructureChildren: SKChildren<Substructure>,
-                syntaxMap: SyntaxMap?) {
+    public init(
+        diagnosticStage: DiagnosticStage,
+        length: Int,
+        offset: Int,
+        substructureChildren: SKChildren<Substructure>,
+        syntaxMap: SyntaxMap?
+    ) {
         self.diagnosticStage = diagnosticStage
         self.length = length
         self.offset = offset
@@ -56,11 +50,11 @@ open class SKGenericResponse<Substructure: SKBaseSubstructure>: NSObject, Codabl
     }
 
     public init(skInformation: SKGenericResponse<Substructure>) {
-        diagnosticStage = skInformation.diagnosticStage
-        length = skInformation.length
-        offset = skInformation.offset
-        topLevelSubstructures = skInformation.topLevelSubstructures
-        syntaxMap = skInformation.syntaxMap
+        self.diagnosticStage = skInformation.diagnosticStage
+        self.length = skInformation.length
+        self.offset = skInformation.offset
+        self.topLevelSubstructures = skInformation.topLevelSubstructures
+        self.syntaxMap = skInformation.syntaxMap
     }
 
     // MARK: - Public Methods
@@ -78,17 +72,11 @@ open class SKGenericResponse<Substructure: SKBaseSubstructure>: NSObject, Codabl
         topLevelSubstructures.resolve(index: 0, filePath: filePath)
     }
 
-    // MARK: - JSON Debug String Convertable Protocol
-
-    open override var debugDescription: String {
-        return jsonDebugDescription
-    }
-
     // MARK: - Equatable Protocol
 
-    open override func isEqual(_ object: Any?) -> Bool {
+    open func isEqual(_ object: Any?) -> Bool {
         guard let rhs = object as? SKGenericResponse<Substructure>
-            else { return false }
+        else { return false }
 
         return diagnosticStage == rhs.diagnosticStage
             && length == rhs.length
@@ -97,6 +85,9 @@ open class SKGenericResponse<Substructure: SKBaseSubstructure>: NSObject, Codabl
             && syntaxMap == rhs.syntaxMap
     }
 
+    public static func == (lhs: SKGenericResponse<Substructure>, rhs: SKGenericResponse<Substructure>) -> Bool {
+        return lhs.isEqual(rhs)
+    }
 }
 
 // MARK: - Byte Range Convertible

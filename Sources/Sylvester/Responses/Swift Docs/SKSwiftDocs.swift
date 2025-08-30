@@ -1,11 +1,3 @@
-//
-//  SKSwiftDocumentation.swift
-//  Sylvester 😼
-//
-//  Created by Chris Zielinski on 12/3/18.
-//  Copyright © 2018 Big Z Labs. All rights reserved.
-//
-
 import Foundation
 import SourceKittenFramework
 
@@ -32,7 +24,7 @@ open class SKGenericSwiftDocs<Substructure: SKBaseSubstructure>: SKGenericRespon
     public init(file: File, compilerArguments: [String]) throws {
         self.file = file
 
-        super.init(skInformation: try SylvesterInterface.shared.swiftDocs(
+        try super.init(skInformation: SylvesterInterface.shared.swiftDocs(
             file: file,
             compilerArguments: compilerArguments
         ))

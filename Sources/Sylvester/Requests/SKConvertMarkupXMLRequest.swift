@@ -7,10 +7,13 @@
 
 import Foundation
 import SourceKittenFramework
+import SylvesterEnumerations
 
 public class SKConvertMarkupXMLRequest: SKRequestType {
     public typealias Response = SKSourceTextResponse
 
+    public var requestKind: SKRequest { .convertMarkupXml }
+    
     public var sourceText: String
     
     public init(sourceText: String) {
@@ -19,7 +22,7 @@ public class SKConvertMarkupXMLRequest: SKRequestType {
     
     public var sourcekitObject: SourceKitObject {
         return [
-            "key.request": UID("source.request.convert.markup.xml"),
+            "key.request": requestKind,
             "key.sourcetext": sourceText,
         ]
     }

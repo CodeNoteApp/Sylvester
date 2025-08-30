@@ -1,11 +1,3 @@
-//
-//  SKModule.swift
-//  Sylvester 😼
-//
-//  Created by Chris Zielinski on 12/12/18.
-//  Copyright © 2018 Big Z Labs. All rights reserved.
-//
-
 import Foundation
 import SourceKittenFramework
 

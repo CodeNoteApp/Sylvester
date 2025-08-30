@@ -7,6 +7,7 @@
 
 import Foundation
 import SourceKittenFramework
+import SylvesterEnumerations
 
 public class SKEditorOpenRequest: SKGenericEditorOpenRequest<SKSubstructure> {
     public typealias Response = SKEditorOpen
@@ -15,6 +16,8 @@ public class SKEditorOpenRequest: SKGenericEditorOpenRequest<SKSubstructure> {
 public class SKGenericEditorOpenRequest<Substructure: SKBaseSubstructure>: SKRequestType {
     public typealias Response = SKGenericEditorOpen<Substructure>
 
+    public var requestKind: SKRequest { .editorOpen }
+    
     public var file: File
 
     public var compilerArguments: [String]
@@ -27,7 +30,7 @@ public class SKGenericEditorOpenRequest<Substructure: SKBaseSubstructure>: SKReq
     public var sourcekitObject: SourceKitObject {
         if let path = file.path {
             return [
-                "key.request": UID("source.request.editor.open"),
+                "key.request": requestKind,
                 "key.name": path,
                 "key.sourcefile": path,
                 "key.compilerargs": compilerArguments + [path],
@@ -35,7 +38,7 @@ public class SKGenericEditorOpenRequest<Substructure: SKBaseSubstructure>: SKReq
         } else {
             let name = String(abs(file.contents.hash))
             return [
-                "key.request": UID("source.request.editor.open"),
+                "key.request": requestKind,
                 "key.name": name,
                 "key.sourcetext": file.contents,
                 "key.compilerargs": compilerArguments + [name],

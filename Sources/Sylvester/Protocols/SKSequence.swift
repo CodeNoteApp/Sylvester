@@ -1,11 +1,3 @@
-//
-//  SKSequence.swift
-//  Sylvester 😼
-//
-//  Created by Chris Zielinski on 1/29/19.
-//  Copyright © 2019 Big Z Labs. All rights reserved.
-//
-
 public protocol SKSequence: AnyObject, Equatable, Codable {
     associatedtype SequenceElement where SequenceElement: SKSequence
 
@@ -41,8 +33,8 @@ public protocol SKSequence: AnyObject, Equatable, Codable {
     static func iteratorClass<T>() -> SKPreOrderDFSIterator<T>.Type
 }
 
-//public extension SKSequence {
+// public extension SKSequence {
 //    static func iteratorClass<T>() -> SKPreOrderDFSIterator<T>.Type {
 //        return SKPreOrderDFSIterator.self
 //    }
-//}
+// }

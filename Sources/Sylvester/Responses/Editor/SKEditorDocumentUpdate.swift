@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SylvesterEnumerations
 
 class SKEditorDocumentUpdate: Codable {
     /// An array of annotations for the tokens of source text.

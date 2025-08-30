@@ -1,16 +1,12 @@
-//
-//  SKCursorInfoRequest.swift
-//
-//
-//  Created by JH on 2023/4/13.
-//
-
 import Foundation
 import SourceKittenFramework
+import SylvesterEnumerations
 
 public class SKCursorInfoRequest: SKRequestType {
     public typealias Response = SKCursorInfo
-    
+
+    public var requestKind: SKRequest { .cursorinfo }
+
     public var file: File
 
     public var offset: Int?
@@ -20,7 +16,7 @@ public class SKCursorInfoRequest: SKRequestType {
     public var compilerArguments: [String]
 
     public var cancelOnSubsequentRequest: Bool
-    
+
     public init(file: File, offset: Int?, usr: String?, compilerArguments: [String], cancelOnSubsequentRequest: Bool) {
         self.file = file
         self.offset = offset
@@ -28,10 +24,10 @@ public class SKCursorInfoRequest: SKRequestType {
         self.compilerArguments = compilerArguments
         self.cancelOnSubsequentRequest = cancelOnSubsequentRequest
     }
-    
+
     public var sourcekitObject: SourceKitObject {
         let request: SourceKitObject = [
-            "key.request": UID("source.request.cursorinfo"),
+            "key.request": requestKind,
             "key.sourcefile": file.sourceKitPath,
             "key.compilerargs": compilerArguments,
             "key.cancel_on_subsequent_request": cancelOnSubsequentRequest.toInt,

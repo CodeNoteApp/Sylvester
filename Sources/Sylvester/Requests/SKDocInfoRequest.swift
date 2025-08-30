@@ -7,6 +7,7 @@
 
 import Foundation
 import SourceKittenFramework
+import SylvesterEnumerations
 
 public class SKDocInfoRequest: SKGenericDocInfoRequest<SKEntity> {
     public typealias Response = SKDocInfo
@@ -15,6 +16,8 @@ public class SKDocInfoRequest: SKGenericDocInfoRequest<SKEntity> {
 public class SKGenericDocInfoRequest<Entity: SKBaseEntity>: SKRequestType {
     public typealias Response = SKGenericDocInfo<Entity>
 
+    public var requestKind: SKRequest { .docinfo }
+    
     public var file: File?
 
     public var moduleName: String?
@@ -29,7 +32,7 @@ public class SKGenericDocInfoRequest<Entity: SKBaseEntity>: SKRequestType {
 
     public var sourcekitObject: SourceKitObject {
         let request: SourceKitObject = [
-            "key.request": UID("source.request.docinfo"),
+            "key.request": requestKind,
             "key.compilerargs": compilerArguments,
         ]
 

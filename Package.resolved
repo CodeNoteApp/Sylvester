@@ -1,12 +1,39 @@
 {
   "pins" : [
     {
+      "identity" : "caseanything",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mesqueeb/CaseAnything",
+      "state" : {
+        "revision" : "705f90ad63884871a264009a0544001d63134461",
+        "version" : "0.1.8"
+      }
+    },
+    {
+      "identity" : "frameworktoolbox",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Mx-Iris/FrameworkToolbox",
+      "state" : {
+        "branch" : "main",
+        "revision" : "211769ddc744e74bbd3789319d962b8a556f112d"
+      }
+    },
+    {
       "identity" : "grmustache.swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/groue/GRMustache.swift",
       "state" : {
         "branch" : "master",
         "revision" : "476ab7b8024f5f99dd6c65b8eeb713d06fc87e56"
+      }
+    },
+    {
+      "identity" : "metacodable",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SwiftyLab/MetaCodable",
+      "state" : {
+        "revision" : "e2b09b4ceed09c972adb7f48572446d07a1c0e16",
+        "version" : "1.5.0"
       }
     },
     {
@@ -34,6 +61,15 @@
       "state" : {
         "revision" : "8c0c0a8b49e080e54e5e328cc552821ff07cd341",
         "version" : "1.2.1"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftlang/swift-syntax.git",
+      "state" : {
+        "revision" : "f99ae8aa18f0cf0d53481901f88a0991dc3bd4a2",
+        "version" : "601.0.1"
       }
     },
     {
