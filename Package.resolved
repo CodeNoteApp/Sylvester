@@ -28,6 +28,15 @@
       }
     },
     {
+      "identity" : "swift-collections",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-collections",
+      "state" : {
+        "revision" : "8c0c0a8b49e080e54e5e328cc552821ff07cd341",
+        "version" : "1.2.1"
+      }
+    },
+    {
       "identity" : "swxmlhash",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/drmohundro/SWXMLHash.git",

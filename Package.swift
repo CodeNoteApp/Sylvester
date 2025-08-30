@@ -11,11 +11,17 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "Sylvester",
-            targets: ["Sylvester"]),
+            targets: ["Sylvester"]
+        ),
+        .executable(
+            name: "SylvesterGenerateBoilerplate",
+            targets: ["SylvesterGenerateBoilerplate"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/Mx-Iris/SourceKitten", branch: "main"),
         .package(url: "https://github.com/groue/GRMustache.swift", branch: "master"),
+        .package(url: "https://github.com/apple/swift-collections", from: "1.0.0"),
     ],
     targets: [
         .target(
@@ -24,7 +30,12 @@ let package = Package(
                 .product(name: "SourceKittenFramework", package: "SourceKitten"),
             ]
         ),
-        
+        .executableTarget(
+            name: "SylvesterGenerateBoilerplate",
+            dependencies: [
+                .product(name: "OrderedCollections", package: "swift-collections"),
+            ]
+        ),
         .testTarget(
             name: "SylvesterTests",
             dependencies: ["Sylvester", .product(name: "Mustache", package: "GRMustache.swift")],
