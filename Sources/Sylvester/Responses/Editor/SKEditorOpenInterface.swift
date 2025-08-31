@@ -9,7 +9,7 @@ open class SKGenericEditorOpenInterface<Substructure: SKBaseSubstructure>: Codab
 
     public let topLevelSubstructures: SKChildren<Substructure>
 
-    public let annotations: SKSortedEntities<SKAnnotation>
+    public let annotations: SKSortedEntities<SKAnnotation>?
 
     public let syntaxMap: SyntaxMap
 
@@ -17,7 +17,7 @@ open class SKGenericEditorOpenInterface<Substructure: SKBaseSubstructure>: Codab
         let container = try decoder.container(keyedBy: SKKey.self)
         self.sourceText = try container.decode(String.self, forKey: .sourcetext)
         self.topLevelSubstructures = try container.decode(SKChildren<Substructure>.self, forKey: .substructure)
-        self.annotations = try container.decode(SKSortedEntities<SKAnnotation>.self, forKey: .annotations)
+        self.annotations = try container.decodeIfPresent(SKSortedEntities<SKAnnotation>.self, forKey: .annotations)
         self.syntaxMap = try container.decode(SyntaxMap.self, forKey: .syntaxmap)
     }
 
